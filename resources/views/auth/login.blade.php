@@ -8,8 +8,9 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('gdsLogin') }}">
                         @csrf
+                        <input type="hidden" name="clientToken" value="17712581db0138ffae88b2f0c68d725d2e56f9a1917abba9afd197442c4bd9e3a1dcab903ce1e7b2bb9d239a7262bd59742f9dda21d5013030d6490f4325ff7e">
 
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
