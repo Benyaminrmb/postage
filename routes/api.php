@@ -13,7 +13,15 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-//
-//Route::get('/users', function (Request $request) {
-//    return \Illuminate\Support\Facades\DB::table('members_tb')->get();;
-//});
+
+Route::get('/gds/login', function (Request $request) {
+    return 'awd';
+});
+Route::post('/gds/login', [
+    App\Http\Controllers\Api\MainController::class,
+    'loginUser'
+]);
+Route::post('/gds/register', [
+    App\Http\Controllers\Api\MainController::class,
+    'registerUser'
+]);

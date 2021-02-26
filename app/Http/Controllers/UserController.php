@@ -2,81 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\MainController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 use phpDocumentor\Reflection\Types\False_;
 
 class UserController extends Controller
 {
-
     public function gdsUserLogin(Request $request)
     {
-        $newUser=$this->getFirstUserByUserNamePassword($request);
-
-
-        $newUser=$this->gdsUserCheck($newUser, $request);
-
-        if($newUser!==false){
-            Auth::loginUsingId($newUser['id']);
+        $MainApiController=new MainController();
+        $response=($MainApiController->loginUser($request));
+        if($response['status']==='success'){
+            Auth::loginUsingId($response['user']['id']);
+            return redirect('/');
         }
-        return redirect('/');
-
+        return redirect('/login');
     }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function getFirstUserByUserNamePassword(Request $request)
-    {
-        $user=User::where('email', $request['email'])->where('password', hash('sha512', 'sd45sv#FEgfe@%&*4RG656Sssd5'.$request['password'].'4sF7s85fEW'))->first();
-        if(empty($user)){
-            return false;
-        }
-        return $user;
-    }
-
-    /**
-     * @param $newUser
-     * @param Request $request
-     * @return mixed
-     */
-    public function gdsUserCheck($newUser, Request $request)
+    public function gdsUserRegister(Request $request)
     {
 
-        if($newUser){
-
-            $requestData=[
-                'method'=>'getUser',
-            ];
-
-            $finalRequestData=array_merge($requestData, $request->all());
-            $response=Http::post('192.168.1.100/gds/infoGds', $finalRequestData);
-            $responseData=$response->json();
+        $MainApiController=new MainController();
+        $response=$MainApiController->registerUser($request)->original;
 
 
-            if(!empty($responseData)){
-                $newUser=new User();
-                $newUser['userType']=$responseData['userType'];
-                $newUser['client_id']=$responseData['client_id'];
-                $newUser['member_id']=$responseData['member_id'];
-                $newUser['name']=$responseData['name'];
-                $newUser['family']=$responseData['family'];
-                $newUser['mobile']=$responseData['mobile'];
-                $newUser['telephone']=$responseData['telephone'];
-                $newUser['email']=$responseData['email'];
-                $newUser['password']=$responseData['password'];
-                $newUser['gender']=$responseData['gender'];
-                $newUser['birthday']=$responseData['birthday'];
-                $newUser['address']=$responseData['address'];
-                $newUser['register_date']=$responseData['register_date'];
-                $newUser->save();
-
-            }
+        if($response['status']==='success'){
+            Auth::loginUsingId($response['user']['id']);
+            return redirect('/');
         }
-
-        return $newUser;
+        return redirect('/register');
     }
+
 }

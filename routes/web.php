@@ -28,3 +28,9 @@ Route::post('/gds/login', [
     'gdsUserLogin'
 ])->name('gdsLogin');
 
+
+Route::post('/gds/register', [
+    App\Http\Controllers\UserController::class,
+    'gdsUserRegister'
+])->name('gdsRegister');
+
