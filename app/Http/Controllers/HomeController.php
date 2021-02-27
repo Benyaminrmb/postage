@@ -25,4 +25,14 @@ class HomeController extends Controller
     {
         return view('home');
     }
+    /**
+     * @param Request $request
+     * @return false|string
+     * @throws \JsonException
+     */
+    public function getJson_encode($array)
+    {
+        return json_encode($array, JSON_THROW_ON_ERROR | true);
+    }
+
 }

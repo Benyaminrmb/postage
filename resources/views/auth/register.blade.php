@@ -39,6 +39,20 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="nationalCode" class="col-md-4 col-form-label text-md-right">National Code</label>
+
+                            <div class="col-md-6">
+                                <input id="nationalCode" type="text" class="form-control @error('nationalCode') is-invalid @enderror" name="nationalCode" value="{{ old('nationalCode') }}" required autocomplete="nationalCode" autofocus>
+
+                                @error('nationalCode')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
 
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>

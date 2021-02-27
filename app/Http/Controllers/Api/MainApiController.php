@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class MainController extends Controller
+class MainApiController extends Controller
 {
     public function loginUser(Request $request)
     {
-        $main = new UserController();
+        $main = new UserApiController();
         return $main->login($request)->original;
     }
 
@@ -20,7 +20,7 @@ class MainController extends Controller
     {
 //        return 'awd';
 //        if($this->validator($request)){
-            $main=new UserController();
+            $main=new UserApiController();
 
             $userLoginCheck=$main->login($request)->original;
             if($userLoginCheck['status']!=='success'){
@@ -58,8 +58,18 @@ class MainController extends Controller
     {
         $requestData=[
             'method'=>$methode,
-            'clientToken'=>'17712581db0138ffae88b2f0c68d725d2e56f9a1917abba9afd197442c4bd9e3a1dcab903ce1e7b2bb9d239a7262bd59742f9dda21d5013030d6490f4325ff7e',
+            'clientToken'=>env('CLIENT_TOKEN'),
         ];
         return array_merge($requestData,$request);
+    }
+
+    public function customJsonResponse($data,$status,$code=null): \Illuminate\Http\JsonResponse
+    {
+        return \response()->json([
+            'response'=>[
+                'status'=>$status,
+                'data'=>$data
+            ]
+        ],$code);
     }
 }

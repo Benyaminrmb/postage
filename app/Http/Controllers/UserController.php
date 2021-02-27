@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Api\MainController;
+use App\Http\Controllers\Api\MainApiController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function gdsUserLogin(Request $request)
     {
-        $MainApiController=new MainController();
+        $MainApiController=new MainApiController();
         $response=($MainApiController->loginUser($request));
         if($response['status']==='success'){
             Auth::loginUsingId($response['user']['id']);
@@ -25,7 +25,7 @@ class UserController extends Controller
     public function gdsUserRegister(Request $request)
     {
 
-        $MainApiController=new MainController();
+        $MainApiController=new MainApiController();
         $response=$MainApiController->registerUser($request)->original;
 
 
@@ -35,5 +35,8 @@ class UserController extends Controller
         }
         return redirect('/register');
     }
-
+    public function profileIndexPage()
+    {
+        return view('profile.index');
+    }
 }

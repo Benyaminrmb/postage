@@ -17,11 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/gds/login', function (Request $request) {
     return 'awd';
 });
-Route::post('/gds/login', [
-    App\Http\Controllers\Api\MainController::class,
-    'loginUser'
-]);
-Route::post('/gds/register', [
-    App\Http\Controllers\Api\MainController::class,
-    'registerUser'
-]);
+
+Route::middleware(['clientToken'])->group(function () {
+    Route::post('/gds/login', [
+        App\Http\Controllers\Api\MainApiController::class,
+        'loginUser'
+    ]);
+    Route::post('/gds/register', [
+        App\Http\Controllers\Api\MainApiController::class,
+        'registerUser'
+    ]);
+});
+
