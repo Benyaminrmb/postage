@@ -17,4 +17,9 @@ class Shipment extends Model
         'deliveryVehicle',
         'postalInformation',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

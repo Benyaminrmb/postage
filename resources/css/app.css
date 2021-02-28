@@ -1,3 +1,5 @@
+@import "./fontawesome.min.css";
+@import "./bootstrap.min.css";
 @font-face {
     font-family: Vazir;
     src: url('../fonts/Vazir-Regular.eot');
@@ -8,6 +10,7 @@
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
     font-family: Vazir;
     src: url('../fonts/Vazir-Bold.eot');
@@ -18,6 +21,7 @@
     font-weight: bold;
     font-style: normal;
 }
+
 @font-face {
     font-family: Vazir;
     src: url('../fonts/Vazir-Black.eot');
@@ -28,6 +32,7 @@
     font-weight: 900;
     font-style: normal;
 }
+
 @font-face {
     font-family: Vazir;
     src: url('../fonts/Vazir-Medium.eot');
@@ -38,6 +43,7 @@
     font-weight: 500;
     font-style: normal;
 }
+
 @font-face {
     font-family: Vazir;
     src: url('../fonts/Vazir-Light.eot');
@@ -48,6 +54,7 @@
     font-weight: 300;
     font-style: normal;
 }
+
 @font-face {
     font-family: Vazir;
     src: url('../fonts/Vazir-Thin.eot');
@@ -58,13 +65,25 @@
     font-weight: 100;
     font-style: normal;
 }
-body{
+
+body {
     font-family: Vazir;
+    background-color: #f8f7ff;
 }
-.bg-lighter{
+
+.card-header {
+    background-color: #fffff9;
+}
+
+.card-footer {
+    background-color: #fffff9;
+}
+
+.bg-lighter {
     background-color: #ffffec !important
 }
-.divDisabled:after{
+
+.divDisabled:after {
     content: "";
     background-color: #ffffffba;
     width: 100%;

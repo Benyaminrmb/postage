@@ -64,7 +64,20 @@ Route::post('/shipment/create', [
     'create'
 ])->name('shipment.create');
 
+Route::get('/admin', [
+    App\Http\Controllers\Admin\AdminController::class,
+    'index'
+])->name('admin.index');
 
+Route::get('/admin/shipment/list', [
+    App\Http\Controllers\Admin\ShipmentController::class,
+    'getList'
+])->name('admin.shipment.list');
+
+Route::post('/admin/shipment/get', [
+    App\Http\Controllers\Admin\ShipmentController::class,
+    'get'
+])->name('admin.shipment.get');
 
 
 

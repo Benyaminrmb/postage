@@ -14,6 +14,7 @@ class ShipmentController extends Controller
         return view('shipment.index');
     }
 
+
     public function new()
     {
         return view('shipment.new');
@@ -40,7 +41,7 @@ class ShipmentController extends Controller
             'receiverMobile' => 'required',
             'receiverNationalCode' => 'nullable',
             'deliveryVehicle' => 'required',
-            'productType' => 'required',
+            'productName' => 'required',
             'productCount' => 'required',
             'productWeight' => 'required',
             'productVolume' => 'required',
@@ -70,7 +71,7 @@ class ShipmentController extends Controller
             'nationalCode'=>$request->input('receiverNationalCode'),
         ]);
         $postalInformation=$homeController->getJson_encode([
-            'type'=>$request->input('productType'),
+            'name'=>$request->input('productName'),
             'count'=>$request->input('productCount'),
             'weight'=>$request->input('productWeight'),
             'volume'=>$request->input('productVolume'),
