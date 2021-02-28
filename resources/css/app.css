@@ -69,6 +69,7 @@
 body {
     font-family: Vazir;
     background-color: #f8f7ff;
+    font-size: 14px;
 }
 
 .card-header {
@@ -90,4 +91,15 @@ body {
     height: 100%;
     position: absolute;
     z-index: 9;
+}
+.font-13{
+    font-size: 13px !important;
+}
+.position-sticky-16{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 16px;
+}
+.btn-outline-primary:hover span {
+    color: #fff !important;
 }
