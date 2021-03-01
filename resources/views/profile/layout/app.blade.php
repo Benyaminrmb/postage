@@ -5,6 +5,7 @@
 
             <!-- Breadcrumb -->
         @include('layouts.breadcrumb')
+
         <!-- /Breadcrumb -->
 
             <div class="row gutters-sm">
@@ -27,27 +28,8 @@
                     </div>
                     <div class="w-100 mt-3">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
-                                <a class="btn p-3 d-flex w-100 btn-outline-primary" href="{{ route('profile.edit') }}">
-                                    <h6 class="mb-0 ml-auto">
-                                        <span class="fa fa-user"></span>
-                                        پروفایل
-                                    </h6>
-                                    <span class="text-secondary small">مشاهده پروفایل شما</span>
-                                </a>
-                            </li>
-                            <li class="list-group-item p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
-                                <a class="btn p-3 d-flex w-100 btn-outline-primary" href="{{ route('home') }}">
-                                    <h6 class="mb-0 ml-auto">
-                                        <span class="fa fa-archive"></span>
-                                        سوابق
-                                    </h6>
-                                    <span class="text-secondary small">درخواست های پیشین شما</span>
-                                </a>
-                            </li>
-
                             @if(Auth::user()->userType === 'agency')
-                                <li class="list-group-item p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
+                                <li class="p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
                                     <a class="btn p-3 d-flex w-100 btn-outline-warning" href="{{ route('admin.index') }}">
                                         <h6 class="mb-0 ml-auto">
                                             <span class="fa fa-code-branch"></span>
@@ -57,11 +39,32 @@
                                     </a>
                                 </li>
                             @endif
+                            <li class="p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
+                                <a class="btn p-3 d-flex w-100 btn-outline-primary" href="{{ route('profile.edit') }}">
+                                    <h6 class="mb-0 ml-auto">
+                                        <span class="fa fa-user"></span>
+                                        پروفایل
+                                    </h6>
+                                    <span class="text-secondary small">مشاهده پروفایل شما</span>
+                                </a>
+                            </li>
+                            <li class="p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
+                                <a class="btn p-3 d-flex w-100 btn-outline-primary" href="{{ route('home') }}">
+                                    <h6 class="mb-0 ml-auto">
+                                        <span class="fa fa-archive"></span>
+                                        سوابق
+                                    </h6>
+                                    <span class="text-secondary small">درخواست های پیشین شما</span>
+                                </a>
+                            </li>
+
+
 
                         </ul>
                     </div>
                 </div>
                 <div class="col-md-8">
+                    @include('layouts.notifications')
                     @yield('profile.index')
                 </div>
 

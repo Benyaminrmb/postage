@@ -1,5 +1,9 @@
 $(document).ready(function () {
     stepPhase('card');
+    $('.simpleSelect2').select2({
+        dir: 'rtl',
+        width: 'resolve',
+    });
 });
 window.stepPhase=function (target){
 
@@ -67,7 +71,7 @@ window.spinnerAppend=function (targert,status=true){
         targert.find('.detail').removeClass('d-none');
     }else{
         targert.find('.detail').addClass('d-none');
-        targert.append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            targert.append('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
     }
 }
 
@@ -142,3 +146,41 @@ window.openModalShipmentList=function (thiss,shipmentId,route){
         }
     });
 }
+
+window.getStateCities=function (state_id,route){
+    $.ajax({
+        url : route,
+        type:'POST',
+        dataType: 'JSON',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data : {
+            state_id:state_id
+        },
+        success : function(data){
+            let fullData = null;
+            try {
+                fullData = JSON.parse(data);
+
+            } catch (e) {
+                fullData = data;
+            }
+
+            var i;
+            var options;
+            for (i = 0; i < fullData.response.data.length; i++) {
+                if(fullData.response.data[i].title!=='undefined'){
+                    options=options+'<option value="'+fullData.response.data[i].id+'">'+fullData.response.data[i].title+'</option>';
+                }
+            }
+            $('#agencyCity').html(options);
+        },
+        error : function(error){
+            console.log(error);
+
+        }
+    });
+
+}
+

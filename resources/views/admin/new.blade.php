@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('profile.layout.app')
 
-@section('content')
+@section('profile.index')
     <div class="container">
         <div class="row justify-content-center">
 

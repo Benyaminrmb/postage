@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\MainApiController;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,13 @@ class ShipmentController extends Controller
 
     public function new()
     {
-        return view('shipment.new');
+        $MainApiController=new MainApiController();
+        $responseArray=$MainApiController->statesAndCities();
+
+        $states=$responseArray['states'];
+        $cities=$responseArray['cities'];
+
+        return view('shipment.new',compact('states','cities'));
     }
 
     /**

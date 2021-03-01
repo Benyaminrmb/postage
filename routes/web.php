@@ -63,6 +63,12 @@ Route::post('/profile/update', [
     App\Http\Controllers\ProfileController::class,
     'update'
 ])->name('profile.update');
+Route::post('/profile/agency/update', [
+    App\Http\Controllers\ProfileController::class,
+    'agencyUpdate'
+])->name('profile.agency.update');
+
+
 
 
 Route::get('/shipment', [
@@ -98,6 +104,11 @@ Route::post('/admin/shipment/get', [
     App\Http\Controllers\Admin\ShipmentController::class,
     'get'
 ])->name('admin.shipment.get');
+
+Route::post('/admin/api/state/cities', [
+    App\Http\Controllers\Admin\AdminController::class,
+    'getStateCities'
+])->name('admin.api.state.cities');
 
 
 

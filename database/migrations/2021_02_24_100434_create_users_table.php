@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('member_id');
             $table->string('name');
             $table->string('family');
+            $table->string('agencyInfo')->nullable();
             $table->string('mobile')->nullable();
             $table->string('nationalCode')->nullable();
             $table->string('telephone')->nullable();

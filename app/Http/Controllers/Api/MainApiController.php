@@ -105,4 +105,24 @@ class MainApiController extends Controller
             ]
         ], $code);
     }
+
+    public function statesAndCities()
+    {
+        $requestArray=$this->makeRequestArray([], 'getIranCities');
+        $response=$this->sendRequestToGds($requestArray);
+        $responseCities=$response->json();
+
+
+        foreach($responseCities as $city){
+            if($city['parent']==='0'){
+                $states[]=$city;
+            }else{
+                $cities[]=$city;
+            }
+        }
+        return [
+            'states'=>$states,
+            'cities'=>$cities
+        ];
+    }
 }
