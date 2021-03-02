@@ -118,7 +118,7 @@
                                         <span class="text-secondary d-flex min-w-50 small">استان : </span>
 
                                         <span class="p-0 mr-auto d-flex font-13 text-center flex-wrap">
-                                           {{ json_decode(Auth::user()->agencyInfo)->location->state->name }}
+                                           {{ @json_decode(Auth::user()->agencyInfo)->location->state->name }}
                                         </span>
                                     </div>
                                 </li>

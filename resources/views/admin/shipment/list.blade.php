@@ -50,7 +50,100 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
+                                    <div class="col-md-12 d-flex mb-3">
+                                        <div class="w-100 rounded border border-warning">
+                                            <div class="card border-0 h-100">
+                                                <div class="card-body p-2">
+                                                    <h6 class="d-flex align-items-center mb-3">
+                                                        <b class="material-icons text-info mr-2 ml-auto">
+                                                            کد درخواست
+                                                        </b>
+                                                        <span class="font-13 text-secondary">
+                                                           <b>
+                                                               <span class="p-1 d-flex w-100 text-secondary" data-replace="id">2</span>
+                                                           </b>
+                                                        </span>
+                                                    </h6>
+                                                    <div class="col-md-12 p-0">
+                                                        <div class="w-100 mt-3">
+                                                            <ul class="list-group list-group-flush">
 
+                                                                <li class="p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <div class="p-1 d-flex w-100 text-secondary">
+                                                                        <span
+                                                                            class="text-secondary small">نام درخواست کننده  : </span>
+                                                                        <span
+                                                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                                                            <b>
+                                                                                <span class="text-dark"
+                                                                                      data-replace="user.name">2</span>
+                                                                            </b>
+                                                                        </span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <div class="p-1 d-flex w-100 text-secondary">
+                                                                        <span
+                                                                            class="text-secondary small">تلفن درخواست کننده  : </span>
+                                                                        <span
+                                                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                                                            <b>
+                                                                            <span class="text-dark"
+                                                                                  data-replace="user.mobile">{{ Auth::user()->mobile }}</span>
+                                                                            </b>
+                                                                        </span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="p-0 mb-1 d-flex text-center flex-wrap">
+                                                                    <div class="p-1 d-flex w-100 text-secondary">
+                                                                        <span
+                                                                            class="text-secondary small">استان مبداء  : </span>
+                                                                        <span
+                                                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                                                            <b>
+                                                                                <span class="text-dark"
+                                                                                      data-replace="origin.state">2</span>
+                                                                            </b>
+                                                                        </span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="p-0 mb-1 d-flex text-center flex-wrap">
+                                                                    <div class="p-1 d-flex w-100 text-secondary">
+                                                                        <span
+                                                                            class="text-secondary small">شهر مبداء  : </span>
+                                                                        <span
+                                                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                                                            <b>
+                                                                                <span class="text-dark"
+                                                                                      data-replace="origin.city">2</span>
+                                                                            </b>
+                                                                        </span>
+                                                                    </div>
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {{--<div class="col-md-12 flex-wrap d-flex">
+                                        <div class="col-md-12 ">
+                                            <div class="w-100 bg-warning">
+                                                awdawdadd
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="w-100 bg-warning">
+                                                awdawdadd
+                                            </div>
+                                        </div>
+                                    </div>--}}
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary">Save changes</button>

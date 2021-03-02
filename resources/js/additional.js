@@ -138,7 +138,7 @@ window.openModalShipmentList=function (thiss,shipmentId,route){
             newBody=newBody+modalKeyValue('وزن مرسوله',postalInformation.weight);
             newBody=newBody+modalKeyValue('حجم مرسوله',postalInformation.volume);
             newBody=newBody+'</div></div>';
-            baseBody.html(newBody);
+            // baseBody.html(newBody);
         },
         error : function(error){
             console.log(error);
@@ -147,7 +147,7 @@ window.openModalShipmentList=function (thiss,shipmentId,route){
     });
 }
 
-window.getStateCities=function (state_id,route){
+window.getStateCities=function (state_id,targetResultData,route){
     $.ajax({
         url : route,
         type:'POST',
@@ -174,7 +174,7 @@ window.getStateCities=function (state_id,route){
                     options=options+'<option value="'+fullData.response.data[i].id+'">'+fullData.response.data[i].title+'</option>';
                 }
             }
-            $('#agencyCity').html(options);
+            $(targetResultData).html(options);
         },
         error : function(error){
             console.log(error);
@@ -183,4 +183,5 @@ window.getStateCities=function (state_id,route){
     });
 
 }
+
 

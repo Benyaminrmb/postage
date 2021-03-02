@@ -18,7 +18,7 @@
                                     <div class="w-100">
 
                                         <p class="text-secondary mb-1 font-13">آدرس : {{Auth::user()->address}}</p>
-                                        <p class="text-muted font-size-sm mb-2 font-13">تعداد سفارش های شما
+                                        <p class="text-muted font-size-sm mb-2 font-13">تعداد سفارش های به ثبت رسیده شما
                                             : {{ print_r(Auth::user()->shipments_count)}} </p>
                                     </div>
 
@@ -30,12 +30,18 @@
                         <ul class="list-group list-group-flush">
                             @if(Auth::user()->userType === 'agency')
                                 <li class="p-0 mb-1 d-flex justify-content-between align-items-center flex-wrap">
-                                    <a class="btn p-3 d-flex w-100 btn-outline-warning" href="{{ route('admin.index') }}">
+                                    <a class="btn p-3 d-flex w-100 btn-outline-warning"
+                                       href="{{ route('admin.index') }}">
                                         <h6 class="mb-0 ml-auto">
                                             <span class="fa fa-code-branch"></span>
                                             پنل مدیریت
                                         </h6>
-                                        <span class="text-secondary small"> تعداد سفارشات امروز <span class="badge p-1 badge-danger">2</span></span>
+                                        <span class="text-secondary small">
+                                            تعداد سفارشات امروز
+                                            <span class="badge p-1 badge-secondary">
+                                                {{ $agencyShipmentsCount }}
+                                            </span>
+                                        </span>
                                     </a>
                                 </li>
                             @endif
@@ -59,12 +65,12 @@
                             </li>
 
 
-
                         </ul>
                     </div>
                 </div>
                 <div class="col-md-8">
                     @include('layouts.notifications')
+
                     @yield('profile.index')
                 </div>
 

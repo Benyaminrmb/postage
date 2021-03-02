@@ -2,7 +2,8 @@
 
 @section('profile.index')
     <div class="row gutters-sm">
-        <div class="col-md-12">
+        @if(Auth::user()->userType === 'agency')
+            <div class="col-md-12">
             <form method="post" action="{{route('profile.agency.update')}}">
                 @csrf
                 <div class="card text-dark bg-warning mb-3">
@@ -16,13 +17,13 @@
                             <div class="form-group">
                                 <label for="agencyState">استان</label>
                                 <select
-                                    onchange="getStateCities($(this).val(),'{{ route('admin.api.state.cities') }}')"
+                                    onchange="getStateCities($(this).val(),'#agencyCity','{{ route('admin.api.state.cities') }}')"
                                     id="agencyState" name="agencyState"
                                     class="form-control font-13 simpleSelect2">
                                     <option selected>یک استان انتخاب کنید</option>
                                     @foreach($states as $state)
                                         <option
-                                            @if(json_decode(Auth::user()->agencyInfo)->location->state->id === $state['id']) selected
+                                            @if(@json_decode(Auth::user()->agencyInfo)->location->state->id === $state['id']) selected
                                             @endif value="{{ $state['id'] }}">{{ $state['title'] }}</option>
                                     @endforeach
                                 </select>
@@ -39,7 +40,7 @@
                                     <option selected>یک استان انتخاب کنید</option>
                                     @foreach($cities as $city)
                                         <option
-                                            @if(json_decode(Auth::user()->agencyInfo)->location->city->id === $city['id']) selected
+                                            @if(@json_decode(Auth::user()->agencyInfo)->location->city->id === $city['id']) selected
                                             @endif value="{{ $city['id'] }}">{{ $city['title'] }}</option>
                                     @endforeach
                                 </select>
@@ -59,6 +60,7 @@
             </form>
 
         </div>
+        @endif
         <div class="col-md-12">
             <form method="post" action="{{route('profile.update')}}">
                 @csrf
@@ -127,7 +129,7 @@
                         <div class="form-group">
                             <label for="birthday">تاریخ تولد</label>
                             <input type="text" name="birthday" class="form-control font-13" id="birthday"
-                                   placeholder="تاریخ تولد" value="{{ Auth::user()->name }}">
+                                   placeholder="تاریخ تولد" value="{{ Auth::user()->birthday }}">
                         </div>
                         <div class="form-group">
                             <label for="address">آدرس</label>

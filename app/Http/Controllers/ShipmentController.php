@@ -38,11 +38,7 @@ class ShipmentController extends Controller
         $request->validate([
             'deliveryType' => 'required',
             'originAddress' => 'required',
-            'originLongAddress' => 'required',
-            'originLatAddress' => 'required',
             'destinationAddress' => 'required',
-            'destinationLongAddress' => 'required',
-            'destinationLatAddress' => 'required',
             'receiverName' => 'required',
             'receiverFamily' => 'required',
             'receiverMobile' => 'required',
@@ -58,6 +54,8 @@ class ShipmentController extends Controller
 
         $originAddress=$homeController->getJson_encode([
             'string'=>$request->input('originAddress'),
+            'state'=>$request->input('originState'),
+            'city'=>$request->input('originCity'),
             'onMap'=>[
                 'long'=>$request->input('originLongAddress'),
                 'lat'=>$request->input('originLatAddress'),
@@ -66,6 +64,8 @@ class ShipmentController extends Controller
 
         $destinationAddress=$homeController->getJson_encode([
             'string'=>$request->input('destinationAddress'),
+            'state'=>$request->input('destinationState'),
+            'city'=>$request->input('destinationCity'),
             'onMap'=>[
                 'long'=>$request->input('destinationLongAddress'),
                 'lat'=>$request->input('destinationLatAddress'),
@@ -155,5 +155,6 @@ class ShipmentController extends Controller
     {
         //
     }
+
 
 }

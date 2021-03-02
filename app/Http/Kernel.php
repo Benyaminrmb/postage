@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AccessCheckerMiddleware;
+use App\Http\Middleware\AgencyShipmentsCount;
 use App\Http\Middleware\ClientToken;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -64,5 +66,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'clientToken' => ClientToken::class,
+        'agencyShipmentsCount' => AgencyShipmentsCount::class,
+        'accessChecker' => AccessCheckerMiddleware::class,
     ];
 }

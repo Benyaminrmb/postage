@@ -18,6 +18,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        'App\Listeners\AccessChecker' => [
+            'App\Events\AccessForMemberOnly',
+            'App\Events\AccessForAgencyOnly',
+        ],
     ];
 
     /**
