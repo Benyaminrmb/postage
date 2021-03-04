@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -14,13 +13,15 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [
-        Registered::class => [
+    protected $listen=[
+        Registered::class=>[
             SendEmailVerificationNotification::class,
         ],
-        'App\Listeners\AccessChecker' => [
-            'App\Events\AccessForMemberOnly',
-            'App\Events\AccessForAgencyOnly',
+        'App\Events\AgencyAccessDenied'=>[
+            'App\Listeners\AgencyAccessDeniedNotification',
+        ],
+        'App\Events\MemberAccessDenied'=>[
+            'App\Listeners\MemberAccessDeniedNotification',
         ],
     ];
 

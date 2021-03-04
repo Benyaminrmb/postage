@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\MainApiController;
 use App\Http\Controllers\Api\UserApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ProfileController extends Controller
 {
@@ -64,6 +65,7 @@ class ProfileController extends Controller
 
         $states=$responseArray['states'];
         $cities=$responseArray['cities'];
+
 
 
         return view('profile.edit', compact('states', 'cities'));

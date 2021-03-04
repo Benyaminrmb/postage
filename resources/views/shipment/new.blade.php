@@ -71,7 +71,7 @@
                                     <div class="form-group">
                                         <label for="originState">استان</label>
                                         <select
-                                            onchange="getStateCities($(this).val(),'#originCity','{{ route('admin.api.state.cities') }}')"
+                                            onchange="getStateCities($(this).val(),'#originCity','{{ route('gds.api.state.cities') }}')"
                                             id="originState" name="originState"
                                             class="w-100 form-control font-13 simpleSelect2">
                                             <option selected>یک استان انتخاب کنید</option>
@@ -140,7 +140,7 @@
                                     <div class="form-group">
                                         <label for="destinationState">استان</label>
                                         <select
-                                            onchange="getStateCities($(this).val(),'#destinationCity','{{ route('admin.api.state.cities') }}')"
+                                            onchange="getStateCities($(this).val(),'#destinationCity','{{ route('gds.api.state.cities') }}')"
                                             id="destinationState" name="destinationState"
                                             class="w-100 form-control font-13 simpleSelect2">
                                             <option selected>یک استان انتخاب کنید</option>

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Http\Controllers\Admin\AdminShipmentController;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
 class AgencyShipmentsCount
@@ -18,9 +19,13 @@ class AgencyShipmentsCount
      */
     public function handle(Request $request, Closure $next)
     {
-        $ShipmentController=new AdminShipmentController();
-        $agencyShipmentsCount=$ShipmentController->agencyShipmentsCount();
-        View::share('agencyShipmentsCount',$agencyShipmentsCount);
+        if(Auth::check()){
+            $ShipmentController=new AdminShipmentController();
+            $agencyShipmentsCount=$ShipmentController->agencyShipmentsCount();
+            View::share('agencyShipmentsCount',$agencyShipmentsCount);
+            return $next($request);
+        }
+        View::share('agencyShipmentsCount','');
         return $next($request);
     }
 }

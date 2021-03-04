@@ -17,7 +17,7 @@
                             <div class="form-group">
                                 <label for="agencyState">استان</label>
                                 <select
-                                    onchange="getStateCities($(this).val(),'#agencyCity','{{ route('admin.api.state.cities') }}')"
+                                    onchange="getStateCities($(this).val(),'#agencyCity','{{ route('gds.api.state.cities') }}')"
                                     id="agencyState" name="agencyState"
                                     class="form-control font-13 simpleSelect2">
                                     <option selected>یک استان انتخاب کنید</option>

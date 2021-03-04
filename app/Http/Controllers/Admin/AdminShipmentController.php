@@ -13,10 +13,9 @@ class AdminShipmentController extends Controller
 {
     public function getList()
     {
-        //        dd(Auth::user());
         $userAgencyInfo=json_decode(Auth::user()->agencyInfo);
         $shipments=Shipment::whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
-            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->get();
+            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->paginate(15);
 
         return view('admin.shipment.list', compact('shipments'));
     }

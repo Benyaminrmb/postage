@@ -1,18 +1,19 @@
-@extends('profile.layout.app')
+@extends('admin.layout.navbar')
 
-@section('profile.index')
+@section('admin.navbar')
 
     <div class="row gutters-sm">
         <div class="col-sm-12 mb-3 ">
-            <div class="w-100 rounded bg-warning h-100 ">
+            <div class="w-100 rounded h-100 ">
+                <div class="col-md-3">
+                    <a class="btn bg-warning  btn-warning p-3 w-100 d-flex" href="{{ route('admin.shipment.list') }}">
+                        <span class="text-dark ml-auto small">لیست سفارشات</span>
 
-                <a class="btn btn-warning p-3 w-100 d-flex" href="{{ route('admin.shipment.list') }}">
-                    <span class="text-dark ml-auto small">لیست سفارشات</span>
-
-                    <span class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                        <span class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
                         <b><span class="fa fa-external-link-alt"></span></b>
                     </span>
-                </a>
+                    </a>
+                </div>
 
             </div>
         </div>
@@ -31,7 +32,8 @@
                                        href="http://{{ $clientData['MainDomain'] }}">
                                         <span class="text-secondary small">وب سایت آژانس : </span>
 
-                                        <span class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                        <span
+                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
                                             <b>{{ $clientData['MainDomain'] }}</b>
                                         </span>
                                     </a>
@@ -41,7 +43,8 @@
                                     <div class="p-1 d-flex w-100 text-secondary">
                                         <span class="text-secondary small">مدیریت اصلی آژانس : </span>
 
-                                        <span class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                        <span
+                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
                                             <b>{{ $clientData['Manager'] }}</b>
                                         </span>
                                     </div>
@@ -51,7 +54,8 @@
                                     <div class="p-1 d-flex w-100 text-secondary">
                                         <span class="text-secondary small">تلفن تماس : </span>
 
-                                        <span class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                        <span
+                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
                                             <b>{{ $clientData['Phone'] }}</b>
                                         </span>
                                     </div>
@@ -97,7 +101,8 @@
                                     <div class="p-1 d-flex w-100 text-secondary">
                                         <span class="text-secondary small">مدیریت  : </span>
 
-                                        <span class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                        <span
+                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
                                             <b>{{ Auth::user()->name }}</b>
                                         </span>
                                     </div>
@@ -107,7 +112,8 @@
                                     <div class="p-1 d-flex w-100 text-secondary">
                                         <span class="text-secondary small">تلفن تماس : </span>
 
-                                        <span class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
+                                        <span
+                                            class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
                                             <b>{{ Auth::user()->telephone }}</b>
                                         </span>
                                     </div>
