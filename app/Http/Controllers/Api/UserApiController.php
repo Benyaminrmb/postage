@@ -122,6 +122,7 @@ class UserApiController extends Controller
         if ($existing) {
             $result=$existing->update($newUser);
         } else {
+
             // create new one
             $result=User::create($newUser);
         }

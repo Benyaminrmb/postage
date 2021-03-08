@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('gender')->nullable();
             $table->string('birthday')->nullable();
             $table->string('address')->nullable();
+            $table->longText('token');
             $table->string('register_date')->nullable();
             $table->timestamps();
         });
