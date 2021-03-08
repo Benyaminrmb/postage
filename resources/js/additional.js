@@ -75,9 +75,12 @@ window.spinnerAppend = function (targert, status = true) {
     }
 }
 
-window.modalKeyValue = function (key, value) {
+window.modalKeyValue = function (key, value,classes=null) {
     var code = null;
-    return code = '<div class="w-100 d-block border-bottom p-2"><span>' + key + ' : </span><span>' + value + '</span></div>';
+    return code = '<ul>\n' +
+        '<li class="text-right pr-2">' + key + ' : </li>\n' +
+        '<li class="text-left pl-2 '+classes+'">' + value + '</li>\n' +
+        '</ul>';
 }
 window.openModalShipmentList = function (thiss, shipmentId, route) {
     spinnerAppend(thiss);
@@ -110,16 +113,45 @@ window.openModalShipmentList = function (thiss, shipmentId, route) {
             let destinationAddress = null;
             let receiverInformation = null;
             let postalInformation = null;
-            originAddress = JSON.parse(fullData.response.data.originAddress);
-            destinationAddress = JSON.parse(fullData.response.data.destinationAddress);
-            receiverInformation = JSON.parse(fullData.response.data.receiverInformation);
-            postalInformation = JSON.parse(fullData.response.data.postalInformation);
 
 
-            baseTitle.html('درخواست مرسوله شماره' + fullData.response.data.id);
+
+
 
             var newBody = null;
-            newBody = '<div class="row justify-content-center"><div class="col-md-10">';
+
+
+
+            if(fullData.response.data.accessId === 'denied'){
+                newBody = '<div class="col-md-12 flex-wrap d-flex">\n' +
+                    '<div class="col-md-4 ">\n' +
+                    '<div class="ship_div card  border border-light text-center">\n' +
+                    '<span\n' +
+                    'class="shipmentTitles-main d-block card-header text-light bg-dark text-right p-2 border-bottom">aw dawd</span>\n' +
+                    '<div class="card-body p-0">';
+
+
+                newBody = newBody + modalKeyValue('کد', fullData.response.data.id);
+                newBody = newBody + modalKeyValue('نوع تحویل', fullData.response.data.deliveryType);
+                newBody = newBody + modalKeyValue('دسترسی شما', fullData.response.data.access,'text-danger');
+                newBody = newBody + modalKeyValue('تاریخ درخواست', fullData.response.data.created_at.date);
+                newBody = newBody + modalKeyValue('ساعت درخواست', fullData.response.data.created_at.time);
+
+                newBody = newBody+'</div>\n' +
+                    '</div>\n' +
+                    '</div></div>';
+
+
+            }else{
+                originAddress = JSON.parse(fullData.response.data.originAddress);
+                destinationAddress = JSON.parse(fullData.response.data.destinationAddress);
+                receiverInformation = JSON.parse(fullData.response.data.receiverInformation);
+                postalInformation = JSON.parse(fullData.response.data.postalInformation);
+            }
+
+
+
+           /* newBody = '<div class="row justify-content-center"><div class="col-md-10">';
 
             newBody = newBody + modalKeyValue('کد', fullData.response.data.id);
             newBody = newBody + modalKeyValue('نوع تحویل', fullData.response.data.deliveryType);
@@ -137,8 +169,14 @@ window.openModalShipmentList = function (thiss, shipmentId, route) {
             newBody = newBody + modalKeyValue('تعداد مرسولات', postalInformation.count);
             newBody = newBody + modalKeyValue('وزن مرسوله', postalInformation.weight);
             newBody = newBody + modalKeyValue('حجم مرسوله', postalInformation.volume);
-            newBody = newBody + '</div></div>';
-            // baseBody.html(newBody);
+            newBody = newBody + '</div></div>';*/
+            baseBody.html(newBody);
+
+
+            var baseTitle_main = baseModal.find('.shipmentTitles-main');
+            baseTitle.html('درخواست مرسوله شماره ' + fullData.response.data.id);
+            baseTitle_main.html('اطلاعات پایه');
+
         },
         error: function (error) {
             console.log(error);

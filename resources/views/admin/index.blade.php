@@ -5,15 +5,7 @@
     <div class="row gutters-sm">
         <div class="col-sm-12 mb-3 ">
             <div class="w-100 rounded h-100 ">
-                <div class="col-md-3">
-                    <a class="btn bg-warning  btn-warning p-3 w-100 d-flex" href="{{ route('admin.shipment.list') }}">
-                        <span class="text-dark ml-auto small">لیست سفارشات</span>
 
-                        <span class="p-0 mr-auto d-flex font-13 justify-content-between align-items-center flex-wrap">
-                        <b><span class="fa fa-external-link-alt"></span></b>
-                    </span>
-                    </a>
-                </div>
 
             </div>
         </div>

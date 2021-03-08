@@ -37,7 +37,7 @@
                                             پنل مدیریت
                                         </h6>
                                         <span class="text-secondary small">
-                                            تعداد سفارشات امروز
+                                            تعداد سفارشات 24 ساعت گذشته
                                             <span class="badge p-1 badge-secondary">
                                                 {{ $agencyShipmentsCount }}
                                             </span>

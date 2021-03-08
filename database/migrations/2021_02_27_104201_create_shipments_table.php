@@ -16,13 +16,19 @@ class CreateShipmentsTable extends Migration
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('agency_id')->nullable()->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('agency_id')->references('id')->on('users')->onDelete('cascade');
             $table->enum('deliveryType',['byUser','byCompany'])->comment('1-delivery by himself 2-the company will come and take it from user');
             $table->string('originAddress');
             $table->string('destinationAddress');
             $table->text('receiverInformation');
             $table->enum('deliveryVehicle',['byAir','byRail','byCar']);
             $table->text('postalInformation');
+            $table->enum('accessResponse',['denied','granted'])->default('denied');
+            $table->text('dataResponse')->nullable();
+            $table->timestamp('ordered_at')->nullable()->default(null);
+            $table->timestamp('responsed_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

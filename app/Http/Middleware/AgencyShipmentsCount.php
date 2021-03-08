@@ -19,7 +19,7 @@ class AgencyShipmentsCount
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::check()){
+        if(Auth::check() && Auth::user()->userType ==='agency'){
             $ShipmentController=new AdminShipmentController();
             $agencyShipmentsCount=$ShipmentController->agencyShipmentsCount();
             View::share('agencyShipmentsCount',$agencyShipmentsCount);

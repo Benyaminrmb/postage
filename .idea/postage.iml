@@ -118,6 +118,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/ui" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/tabuna/breadcrumbs" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/realrashid/sweet-alert" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/hekmatinasser/notowo" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/hekmatinasser/verta" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

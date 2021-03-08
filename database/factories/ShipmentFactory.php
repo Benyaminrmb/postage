@@ -43,6 +43,8 @@ class ShipmentFactory extends Factory
             'receiverInformation' => $arrayValues3[random_int(0,2)],
             'deliveryVehicle' => $arrayValues4[random_int(0,2)],
             'postalInformation' => $arrayValues5[random_int(0,2)],
+            'accessResponse' => 'denied',
+            'dataResponse' => '',
 
         ];
     }

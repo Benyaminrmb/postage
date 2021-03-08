@@ -22,4 +22,9 @@ class Shipment extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function agency()
+    {
+        return $this->belongsTo(User::class,'agency_id','id','users');
+    }
+
 }

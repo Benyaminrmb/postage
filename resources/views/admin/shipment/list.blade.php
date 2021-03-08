@@ -22,7 +22,7 @@
                         </thead>
                         <tbody>
                         @foreach($shipments as $shipment)
-                            <tr>
+                            <tr class="font-12">
 
                                 <th scope="row">{{$shipment->id}}</th>
                                 <th>{{ AdminShipmentController::deliveryTypeFaName($shipment->deliveryType) }}</th>
@@ -56,48 +56,35 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <table class="table table-sm">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">نام</th>
-                                            <th scope="col">نام خانوادگی</th>
-                                            <th scope="col">نوع محصول</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    {{--<div class="col-md-12 flex-wrap d-flex">
-                                        <div class="col-md-12 ">
-                                            <div class="w-100 bg-warning">
-                                                awdawdadd
+                                    <div class="col-md-12 flex-wrap d-flex">
+                                        <div class="col-md-4 ">
+                                            <div class="ship_div card  border border-light text-center">
+                                                <span
+                                                    class="shipmentTitles-main d-block card-header text-light bg-dark text-right p-2 border-bottom">aw dawd</span>
+                                                <div class="card-body p-0">
+                                                    <ul>
+                                                        <li>1</li>
+                                                        <li>Jacob</li>
+                                                    </ul>
+
+                                                    <ul>
+                                                        <li>1</li>
+                                                        <li>Jacob</li>
+                                                    </ul>
+                                                    <ul>
+                                                        <li>1</li>
+                                                        <li>Jacob</li>
+                                                    </ul>
+                                                    <ul>
+                                                        <li>1</li>
+                                                        <li>Jacob</li>
+                                                    </ul>
+
+                                                </div>
                                             </div>
+
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="w-100 bg-warning">
-                                                awdawdadd
-                                            </div>
-                                        </div>
-                                    </div>--}}
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary">Save changes</button>
