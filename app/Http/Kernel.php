@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AccessForAgencyOnlyMiddleware;
 use App\Http\Middleware\AgencyShipmentsCount;
 use App\Http\Middleware\ClientToken;
+use App\Http\Middleware\TokenCheckerMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'clientToken' => ClientToken::class,
         'agencyShipmentsCount' => AgencyShipmentsCount::class,
         'accessChecker' => AccessForAgencyOnlyMiddleware::class,
+        'tokenChecker' => TokenCheckerMiddleware::class,
     ];
 }

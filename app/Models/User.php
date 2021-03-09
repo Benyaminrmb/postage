@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Controllers\Api\ApiTokenController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,14 +10,14 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable,HasApiTokens;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
+    protected $fillable=[
         'name',
         'email',
         'password',
@@ -34,6 +34,7 @@ class User extends Authenticatable
         'birthday',
         'address',
         'token',
+        'token_expired_at',
         'nationalCode',
         'register_date',
     ];
@@ -43,7 +44,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
+    protected $hidden=[
         'password',
         'remember_token',
     ];
@@ -53,18 +54,25 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
+    protected $casts=[
+        'email_verified_at'=>'datetime',
     ];
 
     public function shipments()
     {
-        return $this->hasMany(Shipment::class,'user_id','id');
+        return $this->hasMany(Shipment::class, 'user_id', 'id');
     }
 
     public function agencyShipments()
     {
-        return $this->hasMany(Shipment::class,'agency_id','id');
+        return $this->hasMany(Shipment::class, 'agency_id', 'id');
     }
+
+    public function getNewToken()
+    {
+        $ApiTokenController=new ApiTokenController();
+        return $ApiTokenController->generateToken();
+    }
+
 
 }

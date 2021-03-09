@@ -32,7 +32,17 @@
                                 <td>
                                     <button type="button"
                                             onclick="openModalShipmentList($(this),'{{$shipment->id}}','{{ route('admin.shipment.get') }}')"
-                                            class="btn btn-sm btn-outline-info position-relative">
+                                            class="btn btn-sm
+                                             @if($shipment->ordered_at === null)
+                                                btn-info
+                                            @else
+                                            @if($shipment->accessResponse === null)
+                                                btn-success
+                                                @else
+                                                btn-warning
+                                            @endif
+                                            @endif
+                                             position-relative">
                                         <span class="detail fa fa-eye"></span>
                                     </button>
                                 </td>
@@ -56,39 +66,18 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="col-md-12 flex-wrap d-flex">
-                                        <div class="col-md-4 ">
-                                            <div class="ship_div card  border border-light text-center">
-                                                <span
-                                                    class="shipmentTitles-main d-block card-header text-light bg-dark text-right p-2 border-bottom">aw dawd</span>
-                                                <div class="card-body p-0">
-                                                    <ul>
-                                                        <li>1</li>
-                                                        <li>Jacob</li>
-                                                    </ul>
 
-                                                    <ul>
-                                                        <li>1</li>
-                                                        <li>Jacob</li>
-                                                    </ul>
-                                                    <ul>
-                                                        <li>1</li>
-                                                        <li>Jacob</li>
-                                                    </ul>
-                                                    <ul>
-                                                        <li>1</li>
-                                                        <li>Jacob</li>
-                                                    </ul>
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button"
+                                            data-name="sendShipmentOrder"
+                                            data-shipment-id=""
+                                            data-order-action="create"
+                                            data-create="{{ route('admin.shipment.createOrder') }}"
+                                            data-remove="{{ route('admin.shipment.removeOrder') }}"
+                                            onclick="sendShipmentOrder($(this))"
+                                            class="btn btn-primary btn-sm">ارسال درخواست</button>
+                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">بستن</button>
                                 </div>
                             </div>
                         </div>

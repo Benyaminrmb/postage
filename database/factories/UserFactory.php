@@ -33,6 +33,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'userType' => $arrayValues[random_int(0,1)],
             'client_id' => '4',
+            'token' => '4',
             'member_id' => random_int(500,999),
             'agencyInfo' => $arrayValues2[random_int(0,1)],
             'mobile' => random_int(500,999),

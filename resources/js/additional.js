@@ -88,6 +88,9 @@ window.openModalShipmentList = function (thiss, shipmentId, route) {
     var baseTitle = baseModal.find('.modal-title');
     var baseBody = baseModal.find('.modal-body');
     var baseFooter = baseModal.find('.modal-footer');
+    var orderBtn = baseModal.find('[data-name="sendShipmentOrder"]');
+    var orderClassName=null;
+    orderBtn.attr('data-shipment-id',shipmentId);
 
     $.ajax({
         url: route,
@@ -113,13 +116,19 @@ window.openModalShipmentList = function (thiss, shipmentId, route) {
             let destinationAddress = null;
             let receiverInformation = null;
             let postalInformation = null;
-
-
-
-
-
             var newBody = null;
 
+            if(fullData.response.data.ordered_at === null){
+                orderClassName='text-danger';
+                orderBtn.removeClass('btn-danger').addClass('btn-primary');
+                orderBtn.html('ارسال درخواست');
+                orderBtn.attr('data-order-action','create');
+            }else{
+                orderClassName='text-warning';
+                orderBtn.removeClass('btn-primary').addClass('btn-danger');
+                orderBtn.html('انصراف از درخواست');
+                orderBtn.attr('data-order-action','remove');
+            }
 
 
             if(fullData.response.data.accessId === 'denied'){
@@ -133,7 +142,8 @@ window.openModalShipmentList = function (thiss, shipmentId, route) {
 
                 newBody = newBody + modalKeyValue('کد', fullData.response.data.id);
                 newBody = newBody + modalKeyValue('نوع تحویل', fullData.response.data.deliveryType);
-                newBody = newBody + modalKeyValue('دسترسی شما', fullData.response.data.access,'text-danger');
+
+                newBody = newBody + modalKeyValue('دسترسی شما', fullData.response.data.access,orderClassName);
                 newBody = newBody + modalKeyValue('تاریخ درخواست', fullData.response.data.created_at.date);
                 newBody = newBody + modalKeyValue('ساعت درخواست', fullData.response.data.created_at.time);
 
@@ -142,7 +152,7 @@ window.openModalShipmentList = function (thiss, shipmentId, route) {
                     '</div></div>';
 
 
-            }else{
+            }if(fullData.response.data.accessId === 'granted'){
                 originAddress = JSON.parse(fullData.response.data.originAddress);
                 destinationAddress = JSON.parse(fullData.response.data.destinationAddress);
                 receiverInformation = JSON.parse(fullData.response.data.receiverInformation);
@@ -213,6 +223,49 @@ window.getStateCities = function (state_id, targetResultData, route) {
                 }
             }
             $(targetResultData).html(options);
+        },
+        error: function (error) {
+            console.log(error);
+
+        }
+    });
+
+}
+
+window.sendShipmentOrder = function (thiss) {
+    var shipment_id = thiss.attr('data-shipment-id');
+    var orderAction = thiss.attr('data-order-action');
+    var route = thiss.attr('data-'+orderAction);
+    $.ajax({
+        url: route,
+        type: 'POST',
+        dataType: 'JSON',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: {
+            shipment_id,shipment_id
+        },
+        success: function (data) {
+            let fullData = null;
+            try {
+                fullData = JSON.parse(data);
+
+            } catch (e) {
+                fullData = data;
+            }
+
+            if(fullData.response.data.ordered_at === null){
+                thiss.removeClass('btn-danger').addClass('btn-primary');
+                thiss.html('ارسال درخواست');
+                thiss.attr('data-order-action','create');
+            }else{
+                thiss.removeClass('btn-primary').addClass('btn-danger');
+                thiss.html('انصراف از درخواست');
+                thiss.attr('data-order-action','remove');
+            }
+
+            console.log(fullData)
         },
         error: function (error) {
             console.log(error);

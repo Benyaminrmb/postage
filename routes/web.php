@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
+use \Illuminate\Support\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,13 @@ use Tabuna\Breadcrumbs\Trail;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/test', function(){
+
+})->name('home')->breadcrumbs(function(Trail $trail){
+    return $trail->push('تست', route('home'));
+});
+
 
 /*----------      index        ----------*/
 Route::get('/', function(){
@@ -104,6 +112,16 @@ Route::middleware(['auth'])->group(function(){
         App\Http\Controllers\ShipmentController::class,
         'create'
     ])->name('shipment.create');
+
+    Route::post('/admin/shipment/create/order', [
+        App\Http\Controllers\Admin\AdminShipmentController::class,
+        'createOrder'
+    ])->name('admin.shipment.createOrder');
+
+    Route::post('/admin/shipment/remove/order', [
+        App\Http\Controllers\Admin\AdminShipmentController::class,
+        'removeOrder'
+    ])->name('admin.shipment.removeOrder');
 
 });
 
