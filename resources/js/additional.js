@@ -75,22 +75,79 @@ window.spinnerAppend = function (targert, status = true) {
     }
 }
 
-window.modalKeyValue = function (key, value,classes=null) {
+window.modalKeyValue = function (key, value, classes = null) {
     var code = null;
     return code = '<ul>\n' +
         '<li class="text-right pr-2">' + key + ' : </li>\n' +
-        '<li class="text-left pl-2 '+classes+'">' + value + '</li>\n' +
+        '<li class="text-left pl-2 ' + classes + '">' + value + '</li>\n' +
         '</ul>';
 }
-window.openModalShipmentList = function (thiss, shipmentId, route) {
+
+window.removeBtnClasses = function (thiss) {
+    thiss.removeClass('btn-danger' +
+        ' btn-primary' +
+        ' btn-success' +
+        ' btn-info' +
+        ' btn-warning' +
+        ' btn-outline-info' +
+        ' btn-outline-warning' +
+        ' btn-outline-secondary' +
+        ' btn-outline-success' +
+        ' btn-outline-danger' +
+        ' btn-secondary');
+}
+window.stepStatusClass = function (stepStatus) {
+    if(stepStatus === 'notApproved'){
+        return 'btn-outline-warning';
+    }
+    if(stepStatus === 'onProcess'){
+        return 'btn-outline-warning';
+    }
+    if(stepStatus === 'getProduct'){
+        return 'btn-outline-info';
+    }
+    if(stepStatus === 'onTheWay'){
+        return 'btn-outline-primary';
+    }
+    if(stepStatus === 'receivedByTheRecipient'){
+        return 'btn-outline-success';
+    }
+    if(stepStatus === ''){
+        return 'btn-outline-success';
+    }
+}
+window.changeModalBtnAction = function (thiss, action) {
+    removeBtnClasses(thiss);
+    thiss.prop('disabled', false);
+
+    if (action === 'create') {
+        thiss.addClass('btn-primary');
+        thiss.find('.detail').html('ارسال درخواست');
+        thiss.attr('data-order-action', 'create');
+    }
+    if (action === 'remove') {
+        thiss.addClass('btn-danger');
+        thiss.find('.detail').html('انصراف از درخواست');
+        thiss.attr('data-order-action', 'remove');
+    }
+    if (action === 'granted') {
+        thiss.prop('disabled', true);
+        thiss.addClass('btn-success');
+        thiss.find('.detail').html('دسترسی داده شد');
+        thiss.attr('data-order-action', '');
+    }
+}
+window.openModalShipmentList = function (thiss, shipmentId) {
     spinnerAppend(thiss);
     var baseModal = $('.bd-example-modal-list-lg');
+    var route = thiss.attr('data-route');
     var baseTitle = baseModal.find('.modal-title');
     var baseBody = baseModal.find('.modal-body');
     var baseFooter = baseModal.find('.modal-footer');
     var orderBtn = baseModal.find('[data-name="sendShipmentOrder"]');
-    var orderClassName=null;
-    orderBtn.attr('data-shipment-id',shipmentId);
+    var externalShipmentLink = $('#externalShipmentLink');
+    externalShipmentLink.attr('href', externalShipmentLink.attr('data-route') + '/' + shipmentId);
+    orderBtn.attr('data-shipment-id', shipmentId);
 
     $.ajax({
         url: route,
@@ -118,74 +175,127 @@ window.openModalShipmentList = function (thiss, shipmentId, route) {
             let postalInformation = null;
             var newBody = null;
 
-            if(fullData.response.data.ordered_at === null){
-                orderClassName='text-danger';
-                orderBtn.removeClass('btn-danger').addClass('btn-primary');
-                orderBtn.html('ارسال درخواست');
-                orderBtn.attr('data-order-action','create');
-            }else{
-                orderClassName='text-warning';
-                orderBtn.removeClass('btn-primary').addClass('btn-danger');
-                orderBtn.html('انصراف از درخواست');
-                orderBtn.attr('data-order-action','remove');
+            if (fullData.response.data.ordered_at === null) {
+                changeModalBtnAction(orderBtn, 'create');
+            } else {
+                if (fullData.response.data.accessId === 'granted') {
+                    changeModalBtnAction(orderBtn, 'granted');
+                } else {
+                    changeModalBtnAction(orderBtn, 'remove');
+                }
             }
 
-
-            if(fullData.response.data.accessId === 'denied'){
+            if (fullData.response.data.accessId === 'denied') {
                 newBody = '<div class="col-md-12 flex-wrap d-flex">\n' +
-                    '<div class="col-md-4 ">\n' +
+                    '<div class="col-md-4 mb-2">\n' +
                     '<div class="ship_div card  border border-light text-center">\n' +
                     '<span\n' +
-                    'class="shipmentTitles-main d-block card-header text-light bg-dark text-right p-2 border-bottom">aw dawd</span>\n' +
+                    'class="shipmentTitles-main d-block card-header text-light bg-dark text-right p-2 border-bottom">' +
+                    'اطلاعات پایه' +
+                    '</span>\n' +
                     '<div class="card-body p-0">';
 
 
                 newBody = newBody + modalKeyValue('کد', fullData.response.data.id);
                 newBody = newBody + modalKeyValue('نوع تحویل', fullData.response.data.deliveryType);
 
-                newBody = newBody + modalKeyValue('دسترسی شما', fullData.response.data.access,orderClassName);
+                newBody = newBody + modalKeyValue('دسترسی شما', fullData.response.data.access.title, fullData.response.data.access.class);
                 newBody = newBody + modalKeyValue('تاریخ درخواست', fullData.response.data.created_at.date);
                 newBody = newBody + modalKeyValue('ساعت درخواست', fullData.response.data.created_at.time);
 
-                newBody = newBody+'</div>\n' +
+                newBody = newBody + '</div>\n' +
                     '</div>\n' +
                     '</div></div>';
 
 
-            }if(fullData.response.data.accessId === 'granted'){
-                originAddress = JSON.parse(fullData.response.data.originAddress);
-                destinationAddress = JSON.parse(fullData.response.data.destinationAddress);
-                receiverInformation = JSON.parse(fullData.response.data.receiverInformation);
-                postalInformation = JSON.parse(fullData.response.data.postalInformation);
             }
+            if (fullData.response.data.accessId === 'granted') {
+                receiverInformation = JSON.parse(fullData.response.data.shipment.receiverInformation);
 
 
+                newBody = '<div class="col-md-12 flex-wrap d-flex">\n' +
+                    '<div class="col-md-4 mb-2">\n' +
+                    '<div class="ship_div card  border border-light text-center">\n' +
+                    '<span\n' +
+                    'class="shipmentTitles-main d-block card-header text-light bg-dark text-right p-2 border-bottom">' +
+                    'اطلاعات پایه' +
+                    '</span>\n' +
+                    '<div class="card-body p-0">';
 
-           /* newBody = '<div class="row justify-content-center"><div class="col-md-10">';
 
-            newBody = newBody + modalKeyValue('کد', fullData.response.data.id);
-            newBody = newBody + modalKeyValue('نوع تحویل', fullData.response.data.deliveryType);
-            newBody = newBody + modalKeyValue('آدرس مبداء', originAddress.string);
-            newBody = newBody + modalKeyValue('آدرس مقصد', destinationAddress.string);
-            newBody = newBody + modalKeyValue('نام درخواست کننده', fullData.response.data.user.name);
-            newBody = newBody + modalKeyValue('نام خانوادگی درخواست کننده', fullData.response.data.user.family);
-            newBody = newBody + modalKeyValue('شماره تماس درخواست کننده', fullData.response.data.user.mobile);
-            newBody = newBody + modalKeyValue('کد ملی درخواست کننده', fullData.response.data.user.nationalCode);
-            newBody = newBody + modalKeyValue('نام تحویل گیرنده', receiverInformation.name);
-            newBody = newBody + modalKeyValue('نام خانوادگی تحویل گیرنده', receiverInformation.family);
-            newBody = newBody + modalKeyValue('شماره تماس تحویل گیرنده', receiverInformation.mobile);
-            newBody = newBody + modalKeyValue('کد ملی تحویل گیرنده', receiverInformation.nationalCode);
-            newBody = newBody + modalKeyValue('نام مرسوله', postalInformation.name);
-            newBody = newBody + modalKeyValue('تعداد مرسولات', postalInformation.count);
-            newBody = newBody + modalKeyValue('وزن مرسوله', postalInformation.weight);
-            newBody = newBody + modalKeyValue('حجم مرسوله', postalInformation.volume);
-            newBody = newBody + '</div></div>';*/
+                newBody = newBody + modalKeyValue('کد', fullData.response.data.id);
+                newBody = newBody + modalKeyValue('نوع تحویل', fullData.response.data.deliveryType);
+
+                newBody = newBody + modalKeyValue('دسترسی شما', fullData.response.data.access.title, fullData.response.data.access.class);
+                newBody = newBody + modalKeyValue('تاریخ درخواست', fullData.response.data.created_at.date);
+                newBody = newBody + modalKeyValue('ساعت درخواست', fullData.response.data.created_at.time);
+
+                newBody = newBody + '</div>\n' +
+                    '</div>\n' +
+                    '</div>';
+
+
+                newBody = newBody + '<div class="col-md-4 mb-2">\n' +
+                    '<div class="ship_div card  border border-light text-center">\n' +
+                    '<span\n' +
+                    'class="shipmentTitles-main d-block card-header  text-light bg-dark text-right p-2 border-bottom">' +
+                    'مشخصات درخواست کننده' +
+                    '</span>\n' +
+                    '<div class="card-body p-0">';
+
+
+                newBody = newBody + modalKeyValue('نام', fullData.response.data.user.name);
+                newBody = newBody + modalKeyValue('نام خانوادگی', fullData.response.data.user.family);
+                newBody = newBody + modalKeyValue('کد ملی', fullData.response.data.user.nationalCode);
+                newBody = newBody + modalKeyValue('جنسیت', fullData.response.data.user.gender);
+                newBody = newBody + modalKeyValue('شماره همراه',
+                    '<a title="شماره همراه" href="tel:' + fullData.response.data.user.mobile + '">'
+                    + fullData.response.data.user.mobile +
+                    '</a>', 'btn-link');
+
+                newBody = newBody + modalKeyValue('شماره ثابت',
+                    '<a title="شماره ثابت" href="tel:' + fullData.response.data.user.telephone + '">'
+                    + fullData.response.data.user.telephone +
+                    '</a>', 'btn-link');
+
+                newBody = newBody + modalKeyValue('ایمیل',
+                    '<a title="ایمیل" href="mailto:' + fullData.response.data.user.email + '">'
+                    + fullData.response.data.user.email +
+                    '</a>', 'btn-link');
+
+                newBody = newBody + '</div>\n' +
+                    '</div>\n' +
+                    '</div>';
+
+
+                newBody = newBody + '<div class="col-md-4 mb-2">\n' +
+                    '<div class="ship_div card  border border-light text-center">\n' +
+                    '<span\n' +
+                    'class="shipmentTitles-main d-block card-header  text-light bg-dark text-right p-2 border-bottom">' +
+                    'مشخصات دریافت کننده' +
+                    '</span>\n' +
+                    '<div class="card-body p-0">';
+
+
+                newBody = newBody + modalKeyValue('نام', receiverInformation.name);
+                newBody = newBody + modalKeyValue('نام خانوادگی', receiverInformation.family);
+                newBody = newBody + modalKeyValue('کد ملی', receiverInformation.nationalCode);
+                newBody = newBody + modalKeyValue('شماره همراه',
+                    '<a title="شماره همراه" href="tel:' + receiverInformation.mobile + '">'
+                    + receiverInformation.mobile +
+                    '</a>', 'btn-link');
+
+
+                newBody = newBody + '</div>\n' +
+                    '</div>\n' +
+                    '</div></div>';
+
+
+            }
             baseBody.html(newBody);
 
 
-            var baseTitle_main = baseModal.find('.shipmentTitles-main');
             baseTitle.html('درخواست مرسوله شماره ' + fullData.response.data.id);
-            baseTitle_main.html('اطلاعات پایه');
 
         },
         error: function (error) {
@@ -232,10 +342,32 @@ window.getStateCities = function (state_id, targetResultData, route) {
 
 }
 
+window.getFullData=function (data) {
+    try {
+        return JSON.parse(data);
+
+    } catch (e) {
+        return data;
+    }
+}
+
+window.toastResponse= function (fullData) {
+    swal.fire({
+        toast: true,
+        position: 'bottom-right',
+        title: fullData.response.title,
+        text: fullData.response.message,
+        icon: fullData.response.status,
+        confirmButtonText: 'باشه'
+    });
+}
+
 window.sendShipmentOrder = function (thiss) {
+    spinnerAppend(thiss, true);
     var shipment_id = thiss.attr('data-shipment-id');
     var orderAction = thiss.attr('data-order-action');
-    var route = thiss.attr('data-'+orderAction);
+    var route = thiss.attr('data-' + orderAction);
+    var listBtn = $('[data-btn-shipment-list-id="' + shipment_id + '"]');
     $.ajax({
         url: route,
         type: 'POST',
@@ -244,35 +376,75 @@ window.sendShipmentOrder = function (thiss) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         data: {
-            shipment_id,shipment_id
+            shipment_id: shipment_id
         },
         success: function (data) {
-            let fullData = null;
-            try {
-                fullData = JSON.parse(data);
+            spinnerAppend(thiss, false);
+            let fullData = getFullData(data);
 
-            } catch (e) {
-                fullData = data;
+            if (fullData.response.data.ordered_at === null) {
+                listBtn.removeClass('btn-warning').addClass('btn-info');
+                changeModalBtnAction(thiss, 'create');
+
+            } else {
+                listBtn.removeClass('btn-info').addClass('btn-warning');
+                changeModalBtnAction(thiss, 'remove');
             }
 
-            if(fullData.response.data.ordered_at === null){
-                thiss.removeClass('btn-danger').addClass('btn-primary');
-                thiss.html('ارسال درخواست');
-                thiss.attr('data-order-action','create');
-            }else{
-                thiss.removeClass('btn-primary').addClass('btn-danger');
-                thiss.html('انصراف از درخواست');
-                thiss.attr('data-order-action','remove');
-            }
-
-            console.log(fullData)
+            openModalShipmentList(listBtn, shipment_id);
+            toastResponse(fullData);
         },
         error: function (error) {
-            console.log(error);
-
+            spinnerAppend(thiss, false);
+            var fullError = getFullData(error.responseText);
+            $('.bd-example-modal-list-lg').modal('hide');
+            console.log(1);
+            console.log(fullError);
+            toastResponse(fullError);
         }
     });
 
 }
+window.changeStepStatus = function (thiss) {
+    if(thiss.hasClass('disabled')){
+        return false;
+    }
+    spinnerAppend(thiss, true);
+    var thiss_input=thiss.find('input');
+    var shipment_id = thiss_input.attr('data-shipment-id');
+    var stepStatus = thiss_input.val();
+    var route = thiss_input.attr('data-route');
+    var listBtn = $('.btnStepStatusGroup');
+    listBtn.find('label').each(function (){
+        removeBtnClasses($(this));
+        $(this).removeClass('active');
+        $(this).addClass('disabled');
+    });
+    thiss.addClass('active');
+    $.ajax({
+        url: route,
+        type: 'POST',
+        dataType: 'JSON',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: {
+            shipment_id: shipment_id,
+            stepStatus: stepStatus
+        },
+        success: function (data) {
+            spinnerAppend(thiss, false);
+            let fullData = getFullData(data);
 
-
+            listBtn.find('label').each(function (){
+                removeBtnClasses($(this));
+                $(this).addClass(stepStatusClass(fullData.response.data.stepStatus));
+                $(this).removeClass('disabled');
+            });
+            toastResponse(fullData);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}

@@ -17,7 +17,12 @@ class UserApiController extends Controller
         //        $updateToken=User::where($request['email'])
 
         if(!$user['founded']){
-
+            $MainController=new MainApiController();
+            $newToken=generateToken();
+            $request->request->add([
+                'appToken'=>$newToken['token'],
+                'token_expired_at'=>$newToken['token_expired_at']
+            ]);
             $finalRequestData=$MainController->makeRequestArray($request->all(), 'getUser');
             $response=$MainController->sendRequestToGds($finalRequestData);
             $responseData=$response->json();
@@ -25,6 +30,8 @@ class UserApiController extends Controller
             if(!empty($responseData) && $responseData!==false){
                 $user=$this->userUpdateOrCreate($responseData, $request->all());
                 if($user!==null){
+
+                    $this->createUserToken($user);
 
                     $result=[
                         'status'=>'success',
@@ -61,19 +68,7 @@ class UserApiController extends Controller
         if(empty($user)){
             return ['founded'=>false];
         }
-        $newToken=generateToken();
-        $user->token=$newToken['token'];
-        $user->token_expired_at=$newToken['token_expired_at'];
-        $user->update();
-
-        $MainController=new MainApiController();
-        $finalRequestData=$MainController->makeRequestArray([
-            'appToken'=>$newToken['token'],
-            'user_id'=>$user->member_id,
-
-        ], 'updateToken');
-        $response=$MainController->sendRequestToGds($finalRequestData);
-
+        $this->createUserToken($user);
         return [
             'founded'=>true,
             'user'=>$user
@@ -103,8 +98,10 @@ class UserApiController extends Controller
         $newUser['birthday']=$register_date['birthday'];
         $newUser['address']=$register_date['address'];
         $newUser['register_date']=$register_date['register_date'];
-        $newUser['token']=$requestData['appToken'];
-        $newUser['token_expired_at']=$requestData['token_expired_at'];
+        if(isset($requestData['appToken'])){
+            $newUser['token']=$requestData['appToken'];
+            $newUser['token_expired_at']=$requestData['token_expired_at'];
+        }
 
 
         $existing=User::where('email', $newUser['email'])->first();
@@ -129,6 +126,7 @@ class UserApiController extends Controller
 
         $MainController=new MainApiController();
         $newToken=generateToken();
+
         $request->request->add([
             'appToken'=>$newToken['token'],
             'token_expired_at'=>$newToken['token_expired_at']
@@ -169,5 +167,24 @@ class UserApiController extends Controller
     public function getGdsHashPassword($data): string
     {
         return hash('sha512', 'sd45sv#FEgfe@%&*4RG656Sssd5'.$data.'4sF7s85fEW');
+    }
+
+    /**
+     * @param User $user
+     */
+    public function createUserToken(User $user): \Illuminate\Http\Client\Response
+    {
+        $newToken=generateToken();
+        $user->token=$newToken['token'];
+        $user->token_expired_at=$newToken['token_expired_at'];
+        $user->update();
+
+        $MainController=new MainApiController();
+        $finalRequestData=$MainController->makeRequestArray([
+            'appToken'=>$newToken['token'],
+            'user_id'=>$user->member_id,
+
+        ], 'updateToken');
+        return $MainController->sendRequestToGds($finalRequestData);
     }
 }

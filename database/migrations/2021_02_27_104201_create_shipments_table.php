@@ -26,9 +26,10 @@ class CreateShipmentsTable extends Migration
             $table->enum('deliveryVehicle',['byAir','byRail','byCar']);
             $table->text('postalInformation');
             $table->enum('accessResponse',['denied','granted'])->default('denied');
+            $table->enum('stepStatus',['notApproved','onProcess','getProduct','onTheWay','receivedByTheRecipient'])->default('notApproved');
             $table->text('dataResponse')->nullable();
             $table->timestamp('ordered_at')->nullable()->default(null);
-            $table->timestamp('responsed_at')->nullable()->default(null);
+            $table->timestamp('response_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

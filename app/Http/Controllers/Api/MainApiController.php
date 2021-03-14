@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Client\Response;
+use Illuminate\Http\Response as ResponseStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -96,12 +97,23 @@ class MainApiController extends Controller
         return $json;
     }
 
-    public function customJsonResponse($data, $status, $code=200, $toArray=false): \Illuminate\Http\JsonResponse
+    public function customJsonMessage($title,$message,$data=null)
     {
+        return[
+            'title'=>$title,
+            'message'=>$message,
+            'data'=>$data
+        ];
+    }
+    public function customJsonResponse($data, $status, $code=ResponseStatus::HTTP_OK, $toArray=false): \Illuminate\Http\JsonResponse
+    {
+
         return \response()->json([
             'response'=>[
                 'status'=>$status,
-                'data'=>($toArray ? $this->jsonToArray($data) : $data)
+                'title'=>$data['title'],
+                'message'=>$data['message'],
+                'data'=>($toArray ? $this->jsonToArray($data['data']) : $data['data'])
             ]
         ], $code);
     }

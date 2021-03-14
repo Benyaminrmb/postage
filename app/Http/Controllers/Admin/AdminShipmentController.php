@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Shipment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -21,6 +22,54 @@ class AdminShipmentController extends Controller
         return view('admin.shipment.list', compact('shipments'));
     }
 
+    public function detail($shipmentId)
+    {
+        $userAgencyInfo=json_decode(Auth::user()->agencyInfo);
+        $shipment=Shipment::where('id', $shipmentId)
+            ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->first();
+
+        $shipmentReceiverInformation=json_decode($shipment->receiverInformation, true);
+
+
+        $shipmentOriginAddress=json_decode($shipment->originAddress, true);
+
+        $MainApiController=new MainApiController();
+        $requestArray=$MainApiController->makeRequestArray([
+            'id'=>$shipmentOriginAddress['city']
+        ], 'getCity');
+        $response=$MainApiController->sendRequestToGds($requestArray);
+        $responseCity=$response->json();
+
+        $requestArray=$MainApiController->makeRequestArray([
+            'id'=>$shipmentOriginAddress['state']
+        ], 'getCity');
+        $response=$MainApiController->sendRequestToGds($requestArray);
+        $responseState=$response->json();
+
+        $shipmentOriginAddress['cityTitle']=$responseCity['title'];
+        $shipmentOriginAddress['stateTitle']=$responseState['title'];
+
+        $shipmentDestinationAddress=json_decode($shipment->destinationAddress, true);
+        $MainApiController=new MainApiController();
+        $requestArray=$MainApiController->makeRequestArray([
+            'id'=>$shipmentDestinationAddress['city']
+        ], 'getCity');
+        $response=$MainApiController->sendRequestToGds($requestArray);
+        $responseCity=$response->json();
+
+        $requestArray=$MainApiController->makeRequestArray([
+            'id'=>$shipmentDestinationAddress['state']
+        ], 'getCity');
+        $response=$MainApiController->sendRequestToGds($requestArray);
+        $responseState=$response->json();
+
+        $shipmentDestinationAddress['cityTitle']=$responseCity['title'];
+        $shipmentDestinationAddress['stateTitle']=$responseState['title'];
+
+        return view('admin.shipment.detail', compact('shipment', 'shipmentReceiverInformation', 'shipmentOriginAddress', 'shipmentDestinationAddress'));
+    }
+
     public static function deliveryTypeFaName($val): string
     {
         if($val==='byCompany'){
@@ -31,16 +80,38 @@ class AdminShipmentController extends Controller
         }
     }
 
-    public static function AccessTypeFaName($val, $ordered_at)
+    public static function deliveryVehicleFaName($val): string
+    {
+        if($val==='byRail'){
+            return 'ریلی';
+        }
+        if($val==='byAir'){
+            return 'هوایی';
+        }
+        if($val==='byCar'){
+            return 'خودرویی';
+        }
+    }
+
+    public static function AccessTypeFaName($val, $ordered_at=null)
     {
         if($val==='denied'){
             if($ordered_at!==null){
-                return 'در انتظار تایید';
+                return [
+                    'title'=>'در انتظار تایید',
+                    'class'=>'text-warning'
+                ];
             }
-            return 'غیر مجاز';
+            return [
+                'title'=>'غیر مجاز',
+                'class'=>'text-danger'
+            ];
         }
         if($val==='granted'){
-            return 'مجاز';
+            return [
+                'title'=>'تایید شده',
+                'class'=>'text-success'
+            ];
         }
     }
 
@@ -49,7 +120,19 @@ class AdminShipmentController extends Controller
         $MainApiController=new MainApiController();
         $shipment=Shipment::with('user')->find($request->input('id'));
         if($shipment->ordered_at!==null && $shipment->accessResponse==='granted'){
-            $finalResult=$shipment;
+            $finalResult=[
+                'shipment'=>$shipment,
+                'id'=>$shipment->id,
+                'deliveryType'=>self::deliveryTypeFaName($shipment->deliveryType),
+                'accessId'=>$shipment->accessResponse,
+                'access'=>self::AccessTypeFaName($shipment->accessResponse, $shipment->ordered_at),
+                'user'=>$shipment->user,
+                'created_at'=>[
+                    'date'=>verta($shipment->created_at->timestamp)->format('Y-n-j'),
+                    'time'=>verta($shipment->created_at->timestamp)->format('H:i'),
+                ],
+                'ordered_at'=>$shipment->ordered_at,
+            ];
         }else{
 
             $finalResult=[
@@ -65,7 +148,9 @@ class AdminShipmentController extends Controller
                 'ordered_at'=>$shipment->ordered_at,
             ];
         }
-        return $MainApiController->customJsonResponse($finalResult, 'success', 200);
+
+        $messageData=$MainApiController->customJsonMessage('نمایش محتوا', '',$finalResult);
+        return $MainApiController->customJsonResponse($messageData, 'success');
     }
 
     public function agencyShipmentsCount()
@@ -84,24 +169,93 @@ class AdminShipmentController extends Controller
     {
         $MainApiController=new MainApiController();
 
-        $shipment=Shipment::find($request->input('shipment_id'));
-        $shipment->ordered_at=Carbon::now()->toDateTimeString();
-        $shipment->agency_id=Auth::user()->id;
+        $requestArray=$MainApiController->makeRequestArray([
+            'shipment_id'=>$request->input('shipment_id'),
+            'user_id'=>Auth::user()->id,
+            'user_token'=>Auth::user()->token,
+        ], 'orderRequest');
+        $response=$MainApiController->sendRequestToGds($requestArray);
+        $response=$response->json();
 
-        $shipment->update();
 
-        return $MainApiController->customJsonResponse($shipment, 'success', 200);
+        if($response['status']==='success'){
+            $shipment=Shipment::find($request->input('shipment_id'));
+            $shipment->ordered_at=Carbon::now()->toDateTimeString();
+            $shipment->agency_id=Auth::user()->id;
+            $shipment->update();
+        }
+        $messageData=$MainApiController->customJsonMessage($response['title'], $response['message'],@$shipment);
+        return $MainApiController->customJsonResponse($messageData, $response['status'],$response['http']);
     }
+
     public function removeOrder(Request $request): \Illuminate\Http\JsonResponse
     {
         $MainApiController=new MainApiController();
 
-        $shipment=Shipment::find($request->input('shipment_id'));
-        $shipment->ordered_at=null;
-        $shipment->agency_id=null;
+        $requestArray=$MainApiController->makeRequestArray([
+            'shipment_id'=>$request->input('shipment_id'),
+            'user_id'=>Auth::user()->id,
+            'user_token'=>Auth::user()->token,
+            'accessStatus'=>'remove',
+        ], 'orderRequest');
+        $response=$MainApiController->sendRequestToGds($requestArray);
+        $response=$response->json();
+
+        if($response['status']==='success'){
+            $shipment=Shipment::find($request->input('shipment_id'));
+            $shipment->ordered_at=null;
+            $shipment->agency_id=null;
+            $shipment->update();
+        }
+
+        $messageData=$MainApiController->customJsonMessage($response['title'], $response['message'],@$shipment);
+        return $MainApiController->customJsonResponse($messageData, $response['status'],$response['http']);
+    }
+
+    public function editStepStatus(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $MainApiController=new MainApiController();
+
+        $userAgencyInfo=json_decode(Auth::user()->agencyInfo);
+        $shipment=Shipment::whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)
+            ->where("id", $request->input('shipment_id'))->first();
+
+        $shipment->stepStatus=$request->input('stepStatus');
+
 
         $shipment->update();
 
-        return $MainApiController->customJsonResponse($shipment, 'success', 200);
+
+        $messageData=$MainApiController->customJsonMessage('انجام شد', '',$shipment);
+        return $MainApiController->customJsonResponse($messageData, 'success');
+    }
+
+    /**
+     * @param $shipment
+     */
+    public function stepStatusClass($shipment): string
+    {
+        switch($shipment->stepStatus){
+            case 'onProcess':
+            case 'notApproved':
+                if($shipment->ordered_at===''){
+                    $result='btn-outline-danger';
+                    break;
+                }
+                $result='btn-outline-warning';
+                break;
+            case 'getProduct':
+                $result='btn-outline-info';
+                break;
+            case 'onTheWay':
+                $result='btn-outline-primary';
+                break;
+            case 'receivedByTheRecipient':
+                $result='btn-outline-success';
+                break;
+        }
+        return $result;
+
     }
 }

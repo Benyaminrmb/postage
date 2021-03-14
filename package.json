@@ -24,6 +24,8 @@
         "sass-loader": "^8.0.0"
     },
     "dependencies": {
-        "@laylazi/bootstrap-rtl": "^4.6.0-1"
+        "@laylazi/bootstrap-rtl": "^4.6.0-1",
+        "@sweetalert2/theme-bootstrap-4": "^4.0.3",
+        "sweetalert2": "^10.15.5"
     }
 }

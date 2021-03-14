@@ -113,15 +113,11 @@ Route::middleware(['auth'])->group(function(){
         'create'
     ])->name('shipment.create');
 
-    Route::post('/admin/shipment/create/order', [
-        App\Http\Controllers\Admin\AdminShipmentController::class,
-        'createOrder'
-    ])->name('admin.shipment.createOrder');
 
-    Route::post('/admin/shipment/remove/order', [
-        App\Http\Controllers\Admin\AdminShipmentController::class,
-        'removeOrder'
-    ])->name('admin.shipment.removeOrder');
+
+
+
+
 
 });
 
@@ -155,6 +151,29 @@ Route::middleware(['auth','accessChecker'])->group(function(){
     ])->name('admin.shipment.list')->breadcrumbs(function(Trail $trail){
         return $trail->parent('admin.index')->push('لیست سفارشات', route('admin.shipment.list'));
     });
+
+    Route::post('/admin/shipment/create/order', [
+        App\Http\Controllers\Admin\AdminShipmentController::class,
+        'createOrder'
+    ])->name('admin.shipment.createOrder');
+
+    Route::post('/admin/shipment/remove/order', [
+        App\Http\Controllers\Admin\AdminShipmentController::class,
+        'removeOrder'
+    ])->name('admin.shipment.removeOrder');
+
+    Route::get('/admin/shipment/{shipmentId}', [
+        App\Http\Controllers\Admin\AdminShipmentController::class,
+        'detail'
+    ])->name('admin.shipment.detail')->breadcrumbs(function(Trail $trail){
+        return $trail->parent('admin.shipment.list')->push('جزئیات سفارش', route('admin.shipment.detail',''));
+    });
+
+    Route::post('/admin/shipment/edit/stepStatus', [
+        App\Http\Controllers\Admin\AdminShipmentController::class,
+        'editStepStatus'
+    ])->name('admin.shipment.editStepStatus');
+
 });
 
 

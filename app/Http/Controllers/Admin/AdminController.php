@@ -14,6 +14,7 @@ class AdminController extends Controller
         $requestArray=$MainApiController->makeRequestArray([], 'getClientData');
         $response=$MainApiController->sendRequestToGds($requestArray);
         $clientData=$response->json();
+
         return view('admin.index', compact('clientData'));
     }
 
@@ -25,7 +26,9 @@ class AdminController extends Controller
         ], 'getStateCities');
         $response=$MainApiController->sendRequestToGds($requestArray);
         $clientData=$response->json();
-        return $MainApiController->customJsonResponse($clientData, 'success',200);
+
+        $messageData=$MainApiController->customJsonMessage($clientData['title'], $clientData['message'],$clientData);
+        return $MainApiController->customJsonResponse($messageData, $clientData['status'],$clientData['http']);
     }
 
 }

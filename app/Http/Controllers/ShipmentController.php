@@ -16,6 +16,16 @@ class ShipmentController extends Controller
     }
 
 
+    public function detail($shipmentId)
+    {
+        $userAgencyInfo=json_decode(Auth::user()->agencyInfo);
+        $shipment=Shipment::where('id',$shipmentId)->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->first();
+
+        return view('shipment.detail', compact('shipment'));
+    }
+
+
     public function new()
     {
         $MainApiController=new MainApiController();
