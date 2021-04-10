@@ -29,6 +29,7 @@ class CreateShipmentsTable extends Migration
             $table->enum('stepStatus',['notApproved','onProcess','getProduct','onTheWay','receivedByTheRecipient'])->default('notApproved');
             $table->text('dataResponse')->nullable();
             $table->timestamp('ordered_at')->nullable()->default(null);
+            $table->timestamp('seen_at')->nullable()->default(null);
             $table->timestamp('response_at')->nullable()->default(null);
             $table->timestamps();
         });

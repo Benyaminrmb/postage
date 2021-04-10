@@ -5,15 +5,14 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">{{ $title }}</h1>
+                <div class="col-sm-12 mt-2 mb-2">
+                    {{--{{ $breadcrumb }}--}}
+                    @include('admin.layouts.breadcrumb')
                 </div><!-- /.col -->
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-left">
-{{--                      {{ $breadcrumb }}--}}
-                        @include('admin.layouts.breadcrumb')
-                    </ol>
+{{--                    <h1 class="m-0 text-dark">{{ $title }}</h1>--}}
                 </div><!-- /.col -->
+
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
@@ -22,6 +21,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+            @include('layouts.notifications')
             {{ $slot }}
         </div><!-- /.container-fluid -->
     </section>

@@ -149,6 +149,10 @@ window.openModalShipmentList = function (thiss, shipmentId) {
     externalShipmentLink.attr('href', externalShipmentLink.attr('data-route') + '/' + shipmentId);
     orderBtn.attr('data-shipment-id', shipmentId);
 
+    if(thiss.hasClass('btn-info')){
+        thiss.removeClass('btn-info');
+    }
+
     $.ajax({
         url: route,
         type: 'POST',
@@ -214,7 +218,7 @@ window.openModalShipmentList = function (thiss, shipmentId) {
 
 
                 newBody = '<div class="col-md-12 flex-wrap d-flex">\n' +
-                    '<div class="col-md-4 mb-2">\n' +
+                    '<div class="col-md-12 mb-2">\n' +
                     '<div class="ship_div card  border border-light text-center">\n' +
                     '<span\n' +
                     'class="shipmentTitles-main d-block card-header text-light bg-dark text-right p-2 border-bottom">' +
@@ -235,7 +239,7 @@ window.openModalShipmentList = function (thiss, shipmentId) {
                     '</div>';
 
 
-                newBody = newBody + '<div class="col-md-4 mb-2">\n' +
+                newBody = newBody + '<div class="col-md-12 mb-2">\n' +
                     '<div class="ship_div card  border border-light text-center">\n' +
                     '<span\n' +
                     'class="shipmentTitles-main d-block card-header  text-light bg-dark text-right p-2 border-bottom">' +
@@ -268,7 +272,7 @@ window.openModalShipmentList = function (thiss, shipmentId) {
                     '</div>';
 
 
-                newBody = newBody + '<div class="col-md-4 mb-2">\n' +
+                newBody = newBody + '<div class="col-md-12 mb-2">\n' +
                     '<div class="ship_div card  border border-light text-center">\n' +
                     '<span\n' +
                     'class="shipmentTitles-main d-block card-header  text-light bg-dark text-right p-2 border-bottom">' +
@@ -317,19 +321,14 @@ window.getStateCities = function (state_id, targetResultData, route) {
             state_id: state_id
         },
         success: function (data) {
-            let fullData = null;
-            try {
-                fullData = JSON.parse(data);
-
-            } catch (e) {
-                fullData = data;
-            }
+            let fullData = getFullData(data);
+console.log(fullData);
 
             var i;
             var options;
-            for (i = 0; i < fullData.response.data.length; i++) {
-                if (fullData.response.data[i].title !== 'undefined') {
-                    options = options + '<option value="' + fullData.response.data[i].id + '">' + fullData.response.data[i].title + '</option>';
+            for (i = 0; i < fullData.response.data.data.length; i++) {
+                if (fullData.response.data.data[i].title !== 'undefined') {
+                    options = options + '<option value="' + fullData.response.data.data[i].id + '">' + fullData.response.data.data[i].title + '</option>';
                 }
             }
             $(targetResultData).html(options);
@@ -351,10 +350,12 @@ window.getFullData=function (data) {
     }
 }
 
-window.toastResponse= function (fullData) {
+window.toastResponse= function (fullData,timer='3500') {
     swal.fire({
         toast: true,
+        timerProgressBar:true,
         position: 'bottom-right',
+        timer: timer,
         title: fullData.response.title,
         text: fullData.response.message,
         icon: fullData.response.status,
@@ -383,7 +384,7 @@ window.sendShipmentOrder = function (thiss) {
             let fullData = getFullData(data);
 
             if (fullData.response.data.ordered_at === null) {
-                listBtn.removeClass('btn-warning').addClass('btn-info');
+                listBtn.removeClass('btn-warning');
                 changeModalBtnAction(thiss, 'create');
 
             } else {
@@ -398,8 +399,7 @@ window.sendShipmentOrder = function (thiss) {
             spinnerAppend(thiss, false);
             var fullError = getFullData(error.responseText);
             $('.bd-example-modal-list-lg').modal('hide');
-            console.log(1);
-            console.log(fullError);
+
             toastResponse(fullError);
         }
     });
@@ -441,7 +441,7 @@ window.changeStepStatus = function (thiss) {
                 $(this).addClass(stepStatusClass(fullData.response.data.stepStatus));
                 $(this).removeClass('disabled');
             });
-            toastResponse(fullData);
+            toastResponse(fullData,1500);
         },
         error: function (error) {
             console.log(error);

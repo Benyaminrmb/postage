@@ -7,17 +7,51 @@ use App\Http\Controllers\Controller;
 use App\Models\Shipment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminShipmentController extends Controller
 {
-    public function getList()
+    public function getList($statusId=null)
     {
         $userAgencyInfo=json_decode(Auth::user()->agencyInfo);
-        $shipments=Shipment::whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
-            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->paginate(15);
+
+        if($statusId){
+            if($statusId==='not-approved'){
+                $shipments=Shipment::where('stepStatus', 'notApproved')
+                    ->where('accessResponse', 'granted')
+                    ->where('agency_id', Auth::user()->id)
+                    ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+                    ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->paginate(15);
+
+            }elseif($statusId==='on-process'){
+                $shipments=Shipment::where('stepStatus', 'onProcess')
+                    ->where('accessResponse', 'granted')
+                    ->where('agency_id', Auth::user()->id)
+                    ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+                    ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->paginate(15);
+
+            }elseif($statusId==='complate'){
+                $shipments=Shipment::where('stepStatus', 'receivedByTheRecipient')
+                    ->where('accessResponse', 'granted')
+                    ->where('agency_id', Auth::user()->id)
+                    ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+                    ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->paginate(15);
+
+            }elseif($statusId==='un-complate'){
+                $shipments=Shipment::where('stepStatus', '!=', 'receivedByTheRecipient')
+                    ->where('accessResponse', 'granted')
+                    ->where('agency_id', Auth::user()->id)
+                    ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+                    ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->paginate(15);
+
+            }else{
+                return abort(404);
+            }
+        }else{
+            $shipments=Shipment::whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+                ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)->paginate(15);
+        }
 
         return view('admin.shipment.list', compact('shipments'));
     }
@@ -67,7 +101,9 @@ class AdminShipmentController extends Controller
         $shipmentDestinationAddress['cityTitle']=$responseCity['title'];
         $shipmentDestinationAddress['stateTitle']=$responseState['title'];
 
-        return view('admin.shipment.detail', compact('shipment', 'shipmentReceiverInformation', 'shipmentOriginAddress', 'shipmentDestinationAddress'));
+        $isGranted=$this->isGranted($shipment);
+
+        return view('admin.shipment.detail', compact('shipment', 'shipmentReceiverInformation', 'shipmentOriginAddress', 'shipmentDestinationAddress', 'isGranted'));
     }
 
     public static function deliveryTypeFaName($val): string
@@ -119,6 +155,10 @@ class AdminShipmentController extends Controller
     {
         $MainApiController=new MainApiController();
         $shipment=Shipment::with('user')->find($request->input('id'));
+        if($shipment->seen_at===null){
+            $shipment->seen_at=Carbon::now();
+            $shipment->save();
+        }
         if($shipment->ordered_at!==null && $shipment->accessResponse==='granted'){
             $finalResult=[
                 'shipment'=>$shipment,
@@ -149,7 +189,7 @@ class AdminShipmentController extends Controller
             ];
         }
 
-        $messageData=$MainApiController->customJsonMessage('نمایش محتوا', '',$finalResult);
+        $messageData=$MainApiController->customJsonMessage('نمایش محتوا', '', $finalResult);
         return $MainApiController->customJsonResponse($messageData, 'success');
     }
 
@@ -184,8 +224,8 @@ class AdminShipmentController extends Controller
             $shipment->agency_id=Auth::user()->id;
             $shipment->update();
         }
-        $messageData=$MainApiController->customJsonMessage($response['title'], $response['message'],@$shipment);
-        return $MainApiController->customJsonResponse($messageData, $response['status'],$response['http']);
+        $messageData=$MainApiController->customJsonMessage($response['title'], $response['message'], @$shipment);
+        return $MainApiController->customJsonResponse($messageData, $response['status'], $response['http']);
     }
 
     public function removeOrder(Request $request): \Illuminate\Http\JsonResponse
@@ -208,8 +248,8 @@ class AdminShipmentController extends Controller
             $shipment->update();
         }
 
-        $messageData=$MainApiController->customJsonMessage($response['title'], $response['message'],@$shipment);
-        return $MainApiController->customJsonResponse($messageData, $response['status'],$response['http']);
+        $messageData=$MainApiController->customJsonMessage($response['title'], $response['message'], @$shipment);
+        return $MainApiController->customJsonResponse($messageData, $response['status'], $response['http']);
     }
 
     public function editStepStatus(Request $request): \Illuminate\Http\JsonResponse
@@ -227,7 +267,7 @@ class AdminShipmentController extends Controller
         $shipment->update();
 
 
-        $messageData=$MainApiController->customJsonMessage('انجام شد', '',$shipment);
+        $messageData=$MainApiController->customJsonMessage('انجام شد', '', $shipment);
         return $MainApiController->customJsonResponse($messageData, 'success');
     }
 
@@ -257,5 +297,67 @@ class AdminShipmentController extends Controller
         }
         return $result;
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastUnseenAgencyShipment()
+    {
+        $AdminController=new AdminController();
+        $userAgencyInfo=$AdminController->needUserAgencyInfo();
+
+        if($userAgencyInfo){
+            $lastShipment=Shipment::whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+                ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)
+                ->where('stepStatus', '!=', 'receivedByTheRecipient')->where('seen_at', null)->where('agency_id', null)
+                ->orderBy('created_at', 'desc')->limit(4)->get();
+            return $lastShipment;
+        }
+        return false;
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function unComplateAgencyShipments()
+    {
+        return Auth::user()->unComplateAgencyShipments;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function complateAgencyShipments()
+    {
+        return Auth::user()->complateAgencyShipments;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function onProcessAgencyShipments()
+    {
+        return Auth::user()->onProcessAgencyShipments;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function notApprovedAgencyShipments()
+    {
+        return Auth::user()->notApprovedAgencyShipments;
+    }
+
+    /**
+     * @param $shipment
+     */
+    public function isGranted($shipment): bool
+    {
+        if($shipment->ordered_at!==null && $shipment->accessResponse==='granted'){
+            return true;
+        }
+        return false;
     }
 }

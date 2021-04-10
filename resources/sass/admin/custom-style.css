@@ -224,7 +224,7 @@ ul {
 }
 
 .user-block .comment, .user-block .description, .user-block .username {
-    margin-right: 50px;
+    margin-right: 0px;
     margin-left: 0px;
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Api\ApiTokenController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -65,8 +66,56 @@ class User extends Authenticatable
 
     public function agencyShipments()
     {
-        return $this->hasMany(Shipment::class, 'agency_id', 'id');
+        return $this->hasMany(Shipment::class, 'agency_id', 'id')->orderBy('accessResponse');
     }
+
+    public function unComplateAgencyShipments()
+    {
+        $AdminController=new AdminController();
+        $userAgencyInfo=$AdminController->needUserAgencyInfo();
+
+        return $this->hasMany(Shipment::class, 'agency_id', 'id')
+            ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)
+            ->where('stepStatus', '!=', 'receivedByTheRecipient')->where('accessResponse', 'granted')->orderBy('accessResponse');
+    }
+
+    public function complateAgencyShipments()
+    {
+        $AdminController=new AdminController();
+        $userAgencyInfo=$AdminController->needUserAgencyInfo();
+
+        return $this->hasMany(Shipment::class, 'agency_id', 'id')
+            ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)
+            ->where('stepStatus', 'receivedByTheRecipient')->where('accessResponse', 'granted')->orderBy('accessResponse');
+    }
+
+    public function notApprovedAgencyShipments()
+    {
+        $AdminController=new AdminController();
+        $userAgencyInfo=$AdminController->needUserAgencyInfo();
+
+        if($userAgencyInfo){
+            return $this->hasMany(Shipment::class, 'agency_id', 'id')
+                ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+                ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)
+                ->where('stepStatus', 'notApproved')->where('accessResponse', 'granted')->orderBy('created_at', 'desc');
+        }
+    }
+
+    public function onProcessAgencyShipments()
+    {
+        $AdminController=new AdminController();
+        $userAgencyInfo=$AdminController->needUserAgencyInfo();
+
+
+        return $this->hasMany(Shipment::class, 'agency_id', 'id')
+            ->whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
+            ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)
+            ->where('stepStatus', 'onProcess')->where('accessResponse', 'granted')->orderBy('created_at', 'desc');
+    }
+
 
     public function getNewToken()
     {

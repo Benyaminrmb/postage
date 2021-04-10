@@ -10,12 +10,19 @@ class Shipment extends Model
     use HasFactory;
     protected $fillable=[
         'user_id',
+        'agency_id',
         'deliveryType',
         'originAddress',
         'destinationAddress',
         'receiverInformation',
         'deliveryVehicle',
         'postalInformation',
+        'accessResponse',
+        'stepStatus',
+        'dataResponse',
+        'ordered_at',
+        'seen_at',
+        'response_at',
     ];
     public function user()
     {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\MainApiController;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ShipmentController extends Controller
 {
@@ -34,7 +35,7 @@ class ShipmentController extends Controller
         $states=$responseArray['states'];
         $cities=$responseArray['cities'];
 
-        return view('shipment.new',compact('states','cities'));
+        return view('profile.shipment.new',compact('states','cities'));
     }
 
     /**
@@ -107,7 +108,7 @@ class ShipmentController extends Controller
 
         $shipment=Shipment::create($requirement);
 
-        dd($shipment);
+        toast('Success Toast','success');
     }
 
     /**

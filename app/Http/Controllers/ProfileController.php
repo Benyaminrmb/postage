@@ -71,6 +71,24 @@ class ProfileController extends Controller
         return view('profile.edit', compact('states', 'cities'));
     }
 
+    public function panelIndex()
+    {
+        return view('profile.panel');
+    }
+
+    public function editAgencyState()
+    {
+        $MainApiController=new MainApiController();
+        $responseArray=$MainApiController->statesAndCities();
+
+        $states=$responseArray['states'];
+        $cities=$responseArray['cities'];
+
+
+
+        return view('profile.agencyState', compact('states', 'cities'));
+    }
+
 
     public function update(Request $request)
     {

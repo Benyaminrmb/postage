@@ -12,7 +12,7 @@
                 <a class="nav-link" href="{{ route('admin.index') }}">مدیریت</a>
             </li>
             <li class="nav-item liBadge {{ request()->is('admin/shipment/list') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.shipment.list') }}">لیست سفارشات</a>
+                <a class="nav-link" href="{{ route('admin.shipment.list','') }}">لیست سفارشات</a>
                 @if($agencyShipmentsCount > 0)
                     <span class="badge badge-primary">{{$agencyShipmentsCount}}</span>
                 @endif
