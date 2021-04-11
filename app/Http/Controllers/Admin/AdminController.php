@@ -39,7 +39,8 @@ class AdminController extends Controller
             'state_id'=>$request->input('state_id')
         ], 'getStateCities');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $clientData=$response->json();
+
+        $clientData=$MainApiController->fixJsonEncode($response);
 
         $messageData=$MainApiController->customJsonMessage($clientData['title'], $clientData['message'],$clientData);
         return $MainApiController->customJsonResponse($messageData, $clientData['status'],$clientData['http']);

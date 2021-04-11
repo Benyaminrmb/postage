@@ -8,6 +8,7 @@ use App\Models\Shipment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminShipmentController extends Controller
@@ -73,13 +74,14 @@ class AdminShipmentController extends Controller
             'id'=>$shipmentOriginAddress['city']
         ], 'getCity');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $responseCity=$response->json();
+        $responseCity=$MainApiController->fixJsonEncode($response);
 
         $requestArray=$MainApiController->makeRequestArray([
             'id'=>$shipmentOriginAddress['state']
         ], 'getCity');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $responseState=$response->json();
+        $responseState=$MainApiController->fixJsonEncode($response);
+
 
         $shipmentOriginAddress['cityTitle']=$responseCity['title'];
         $shipmentOriginAddress['stateTitle']=$responseState['title'];
@@ -90,13 +92,15 @@ class AdminShipmentController extends Controller
             'id'=>$shipmentDestinationAddress['city']
         ], 'getCity');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $responseCity=$response->json();
+        $responseCity=$MainApiController->fixJsonEncode($response);
+
 
         $requestArray=$MainApiController->makeRequestArray([
             'id'=>$shipmentDestinationAddress['state']
         ], 'getCity');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $responseState=$response->json();
+        $responseState=$MainApiController->fixJsonEncode($response);
+
 
         $shipmentDestinationAddress['cityTitle']=$responseCity['title'];
         $shipmentDestinationAddress['stateTitle']=$responseState['title'];
@@ -215,7 +219,7 @@ class AdminShipmentController extends Controller
             'user_token'=>Auth::user()->token,
         ], 'orderRequest');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $response=$response->json();
+        $response=$MainApiController->fixJsonEncode($response);
 
 
         if($response['status']==='success'){
@@ -239,7 +243,8 @@ class AdminShipmentController extends Controller
             'accessStatus'=>'remove',
         ], 'orderRequest');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $response=$response->json();
+        $response=$MainApiController->fixJsonEncode($response);
+
 
         if($response['status']==='success'){
             $shipment=Shipment::find($request->input('shipment_id'));
@@ -304,14 +309,18 @@ class AdminShipmentController extends Controller
      */
     public function getLastUnseenAgencyShipment()
     {
+
         $AdminController=new AdminController();
         $userAgencyInfo=$AdminController->needUserAgencyInfo();
 
         if($userAgencyInfo){
+
             $lastShipment=Shipment::whereJsonContains('originAddress->city', $userAgencyInfo->location->city->id)
                 ->whereJsonContains('originAddress->state', $userAgencyInfo->location->state->id)
                 ->where('stepStatus', '!=', 'receivedByTheRecipient')->where('seen_at', null)->where('agency_id', null)
                 ->orderBy('created_at', 'desc')->limit(4)->get();
+
+
             return $lastShipment;
         }
         return false;

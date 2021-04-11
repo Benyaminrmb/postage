@@ -26,7 +26,9 @@ class UserController extends Controller
     {
 
         $MainApiController=new MainApiController();
-        $response=$MainApiController->registerUser($request);
+        $response=$MainApiController->registerUser($request)->original;
+
+
 
 
         if($response['status']==='success'){

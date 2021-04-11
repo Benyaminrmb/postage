@@ -64,7 +64,7 @@ class MainApiController extends Controller
      */
     public function sendRequestToGds(array $finalRequestData): Response
     {
-        return Http::post('192.168.1.100/gds/infoGds', $finalRequestData);
+        return Http::post('https://s360online.iran-tech.com/gds/infoGds', $finalRequestData);
     }
 
     /**
@@ -122,7 +122,7 @@ class MainApiController extends Controller
     {
         $requestArray=$this->makeRequestArray([], 'getIranCities');
         $response=$this->sendRequestToGds($requestArray);
-        $responseCities=$response->json();
+        $responseCities=$this->fixJsonEncode($response);
 
 
         foreach($responseCities as $city){
@@ -136,5 +136,17 @@ class MainApiController extends Controller
             'states'=>$states,
             'cities'=>$cities
         ];
+    }
+
+    public function fixJsonEncode(\Illuminate\Http\Client\Response $response)
+    {
+        $enc=mb_detect_encoding($response->body());
+
+        if($enc=='UTF-8'){
+            $response=preg_replace('/[^(\x20-\x7F)]*/', '', $response);
+        }
+
+        $responseData=(json_decode($response, true));
+        return $responseData;
     }
 }

@@ -144,13 +144,14 @@ class ProfileController extends Controller
             'id'=>$request->input('agencyCity')
         ], 'getCity');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $responseCity=$response->json();
+        $responseCity=$MainApiController->fixJsonEncode($response);
 
         $requestArray=$MainApiController->makeRequestArray([
             'id'=>$request->input('agencyState')
         ], 'getCity');
         $response=$MainApiController->sendRequestToGds($requestArray);
-        $responseState=$response->json();
+        $responseState=$MainApiController->fixJsonEncode($response);
+
 
         $agencyInfo=[
             'location'=>[

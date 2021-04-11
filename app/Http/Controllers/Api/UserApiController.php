@@ -25,7 +25,11 @@ class UserApiController extends Controller
             ]);
             $finalRequestData=$MainController->makeRequestArray($request->all(), 'getUser');
             $response=$MainController->sendRequestToGds($finalRequestData);
-            $responseData=$response->json();
+
+
+            $responseData=$MainController->fixJsonEncode($response);
+
+            //            $responseData=$response->json();
 
             if(!empty($responseData) && $responseData!==false){
                 $user=$this->userUpdateOrCreate($responseData, $request->all());
@@ -135,11 +139,16 @@ class UserApiController extends Controller
 
         $response=$MainController->sendRequestToGds($finalRequestData);
 
-        $responseData=$response->json();
+
+        $responseData=$MainController->fixJsonEncode($response);
+
+
+        //        $responseData=$response->json();
 
 
         if(!empty($responseData)){
             $user=$this->userUpdateOrCreate($responseData['user'], $request->all());
+
             if($user!==null){
                 $result=[
                     'status'=>'success',
@@ -151,6 +160,7 @@ class UserApiController extends Controller
                 ];
             }
         }else{
+
             $result=[
                 'status'=>'error2'
             ];
@@ -187,4 +197,6 @@ class UserApiController extends Controller
         ], 'updateToken');
         return $MainController->sendRequestToGds($finalRequestData);
     }
+
+
 }
