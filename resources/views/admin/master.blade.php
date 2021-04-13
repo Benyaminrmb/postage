@@ -56,6 +56,6 @@
     <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
+@include('sweetalert::alert')
 </body>
 </html>

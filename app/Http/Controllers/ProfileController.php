@@ -73,6 +73,7 @@ class ProfileController extends Controller
 
     public function panelIndex()
     {
+
         return view('profile.panel');
     }
 

@@ -108,7 +108,9 @@ class ShipmentController extends Controller
 
         $shipment=Shipment::create($requirement);
 
-        toast('Success Toast','success');
+        alert()->success('درخواست شما ثبت شد','ثبت مرسوله شما با موفقیت انجام شد')->showConfirmButton('متوجه شدم');
+
+        return redirect('/profile/panel');
     }
 
     /**
