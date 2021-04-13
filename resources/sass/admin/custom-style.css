@@ -58,10 +58,38 @@
     font-weight: 900;
 }
 
+@font-face {
+    font-family: iranyekan;
+    src: url('../fonts/iranyekan/iranyekanwebbold.eot');
+    src: url('../fonts/iranyekan/iranyekanwebbold.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/iranyekan/iranyekanwebbold.woff2') format('woff2'),
+    url('../fonts/iranyekan/iranyekanwebbold.woff') format('woff'),
+    url('../fonts/iranyekan/iranyekanwebbold.ttf') format('truetype');
+
+}
+@font-face {
+    font-family: iransans;
+    src: url('../fonts/sans/IRANSansWeb_Medium.eot');
+    src: url('../fonts/sans/IRANSansWeb_Medium.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/sans/IRANSansWeb_Medium.woff2') format('woff2'),
+    url('../fonts/sans/IRANSansWeb_Medium.woff') format('woff'),
+    url('../fonts/sans/IRANSansWeb_Medium.ttf') format('truetype');
+
+}
+@font-face {
+    font-family: persian-number;
+    src: url('../fonts/iranyekan/iranyekanwebbold(fanum).eot');
+    src: url('../fonts/iranyekan/iranyekanwebbold(fanum).eot?#iefix') format('embedded-opentype'),
+    url('../fonts/iranyekan/iranyekanwebbold(fanum).woff2') format('woff2'),
+    url('../fonts/iranyekan/iranyekanwebbold(fanum).woff') format('woff'),
+    url('../fonts/iranyekan/iranyekanwebbold(fanum).ttf') format('truetype');
+
+}
+
 /*---------------------------------- End of fonts ---------------------------------- */
 
 body {
-    font-family: 'Vazir', sans-serif !important;
+    font-family: iransans, persian-number !important;
 }
 
 .ltr {

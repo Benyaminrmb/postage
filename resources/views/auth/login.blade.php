@@ -58,6 +58,9 @@
                                     ورود
                                 </button>
 
+                                <a href="{{ route('register') }}" class="btn btn-reg">ثبت نام</a>
+
+
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
                                         فراموشی رمز عبور

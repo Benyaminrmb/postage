@@ -68,13 +68,53 @@
     font-weight: 100;
     font-style: normal;
 }
+@font-face {
+    font-family: iransans;
+    src: url('../fonts/sans/IRANSansWeb_Medium.eot');
+    src: url('../fonts/sans/IRANSansWeb_Medium.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/sans/IRANSansWeb_Medium.woff2') format('woff2'),
+    url('../fonts/sans/IRANSansWeb_Medium.woff') format('woff'),
+    url('../fonts/sans/IRANSansWeb_Medium.ttf') format('truetype');
+
+}
+@font-face {
+    font-family: persian-number;
+    src: url('../fonts/iranyekan/iranyekanwebbold(fanum).eot');
+    src: url('../fonts/iranyekan/iranyekanwebbold(fanum).eot?#iefix') format('embedded-opentype'),
+    url('../fonts/iranyekan/iranyekanwebbold(fanum).woff2') format('woff2'),
+    url('../fonts/iranyekan/iranyekanwebbold(fanum).woff') format('woff'),
+    url('../fonts/iranyekan/iranyekanwebbold(fanum).ttf') format('truetype');
+
+}
 
 body {
-    font-family: Vazir;
+    font-family: iransans, persian-number !important;
     background-color: #f8f7ff;
     font-size: 14px;
 }
+.menu_img{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+.menu_img a{
+    display: block;
+    text-align: center;
+    transition: all ease .4s;
+    width: 450px;
 
+}
+.menu_img:hover a{
+    transform: scale(0.96);
+}
+.menu_img a img{
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 2px 4px;
+    width: 100%;
+}
+.btn-reg{
+    border: 1px solid #eee;
+}
 .card-header {
     background-color: #fffff9;
 }

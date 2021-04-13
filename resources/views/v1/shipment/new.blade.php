@@ -53,59 +53,57 @@
                     <div class="card-body p-2">
 
                         <div class="form-group">
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <label for="originAddress">آدرس مبداء</label>
-                                    <input type="text" name="originAddress" value="{{ old('originAddress') }}"
-                                           class="w-100 form-control @error('originAddress') is-invalid @enderror "
-                                           id="originAddress" placeholder="آدرس مبداء">
-                                    @error('originAddress')
-                                    <span class="invalid-feedback" role="alert">
+
+                            <div class="col-6">
+                                <label for="originAddress">آدرس مبداء</label>
+                                <input type="text" name="originAddress" value="{{ old('originAddress') }}"
+                                       class="w-100 form-control @error('originAddress') is-invalid @enderror "
+                                       id="originAddress" placeholder="آدرس مبداء">
+                                @error('originAddress')
+                                <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
-                                    @enderror
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="originState">استان</label>
+                                    <select
+                                        onchange="getStateCities($(this).val(),'#originCity','{{ route('gds.api.state.cities') }}')"
+                                        id="originState" name="originState"
+                                        class="w-100 form-control font-13 simpleSelect2">
+                                        <option selected>یک استان انتخاب کنید</option>
+                                        @foreach($states as $state)
+                                            <option value="{{ $state['id'] }}">{{ $state['title'] }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                            <div class="w-100 d-flex">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="originState">استان</label>
-                                        <select
-                                            onchange="getStateCities($(this).val(),'#originCity','{{ route('gds.api.state.cities') }}')"
-                                            id="originState" name="originState"
-                                            class="w-100 form-control font-13 simpleSelect2">
-                                            <option selected>یک استان انتخاب کنید</option>
-                                            @foreach($states as $state)
-                                                <option value="{{ $state['id'] }}">{{ $state['title'] }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="originCity">شهر</label>
+                                    <select id="originCity" name="originCity"
+                                            class="form-control font-13 simpleSelect2">
+                                        <option disabled>ابتدا استان را انتخاب کنید</option>
+                                    </select>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="originCity">شهر</label>
-                                        <select id="originCity" name="originCity"
-                                                class="form-control font-13 simpleSelect2">
-                                            <option disabled>ابتدا استان را انتخاب کنید</option>
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="agencyState">نقشه</label>
+                                    <div id="map2"></div>
+                                    <input type="hidden" name="originLongAddress" id="originLongAddress"
+                                           value="@if(old('originLongAddress') === null){{ '51.3668215' }}@else{ { old('originLongAddress') }}@endif"
+                                           class="form-control @error('originLongAddress') is-invalid @enderror ">
+                                    <input type="hidden" name="originLatAddress" id="originLatAddress"
+                                           value="@if(old('originLatAddress') === null){{'35.6729995'}}@else {{ old('originLatAddress') }}@endif"
+                                           class="form-control @error('originLatAddress') is-invalid @enderror ">
                                 </div>
                             </div>
 
 
                             <div class="w-100 d-flex">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="agencyState">نقشه</label>
-                                        <div id="map2"></div>
-                                        <input type="hidden" name="originLongAddress" id="originLongAddress"
-                                               value="@if(old('originLongAddress') === null){{ '51.3668215' }}@else{ { old('originLongAddress') }}@endif"
-                                               class="form-control @error('originLongAddress') is-invalid @enderror ">
-                                        <input type="hidden" name="originLatAddress" id="originLatAddress"
-                                               value="@if(old('originLatAddress') === null){{'35.6729995'}}@else {{ old('originLatAddress') }}@endif"
-                                               class="form-control @error('originLatAddress') is-invalid @enderror ">
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
