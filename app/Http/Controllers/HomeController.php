@@ -33,7 +33,7 @@ class HomeController extends Controller
      */
     public function getJson_encode($array)
     {
-        return json_encode($array, JSON_THROW_ON_ERROR | true);
+        return json_encode($array, JSON_THROW_ON_ERROR | true |  JSON_UNESCAPED_UNICODE);
     }
 
 }

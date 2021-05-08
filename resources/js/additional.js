@@ -448,3 +448,26 @@ window.changeStepStatus = function (thiss) {
         }
     });
 }
+window.addShipmentOptions = function (thiss) {
+    var baseShipmentOption=$('.baseShipmentOptionDiv:first');
+    var Counter=$('.baseShipmentOptionDiv').length;
+    var cloned=baseShipmentOption.clone();
+    cloned.find('label').attr('for',cloned.find('label').attr('for')+'_'+Counter);
+    cloned.find('input').attr('id',cloned.find('input').attr('id')+'_'+Counter);
+    cloned.find('span.closeBtn').removeClass('d-none');
+    cloned.find('input').val('');
+    $('.baseShipmentOptionDiv:last').after(cloned);
+}
+window.closeShipmentOptions = function (thiss) {
+    thiss.parent('.baseShipmentOptionDiv').remove();
+}
+window.shipmentTypeChange = function (thiss) {
+    var box=$('.shipmentTypeSelectBox');
+    if(thiss.val() === 'select'){
+        box.removeClass('d-none');
+    }else{
+        if(!box.hasClass('d-none')){
+            box.addClass('d-none')
+        }
+    }
+}

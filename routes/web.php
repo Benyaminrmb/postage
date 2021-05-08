@@ -181,6 +181,25 @@ Route::middleware(['agencyShipmentData'])->group(function(){
             'editStepStatus'
         ])->name('admin.shipment.editStepStatus');
 
+        Route::get('/admin/shipments/options/new', [
+            App\Http\Controllers\Admin\AdminShipmentController::class,
+            'newShipmentOptions'
+        ])->name('admin.shipments.options.new')->breadcrumbs(function(Trail $trail){
+            return $trail->parent('admin.shipments.options')->push('افزودن گذینه', route('admin.shipments.options.new'));
+        });
+
+        Route::get('/admin/shipments/options/', [
+            App\Http\Controllers\Admin\AdminShipmentController::class,
+            'listShipmentOptions'
+        ])->name('admin.shipments.options')->breadcrumbs(function(Trail $trail){
+            return $trail->parent('admin.index')->push('تنظیمات مرسولات', route('admin.shipments.options'));
+        });
+
+        Route::post('/admin/shipments/options/', [
+            App\Http\Controllers\Admin\AdminShipmentController::class,
+            'storeShipmentOptions'
+        ])->name('admin.shipments.new.options');
+
     });
 });
 Route::middleware([

@@ -101,6 +101,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
+                                    <a href="{{ route('admin.shipments.new.options') }}"
+                                       class="nav-link {{ request()->routeIs('admin.shipments.new.options') ? 'active' : '' }}">
+                                        <i class="fad fa-th-list"></i>
+                                        <p>گذینه مورد نیاز مرسوله</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="{{ route('admin.shipments.list') }}"
                                        class="nav-link {{ request()->routeIs('admin.shipments.list') ? 'active' : '' }}">
                                         <i class="fad fa-th-list"></i>

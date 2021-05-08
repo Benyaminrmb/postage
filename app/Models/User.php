@@ -63,6 +63,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Shipment::class, 'user_id', 'id');
     }
+    public function shipmentOptions()
+    {
+        return $this->hasMany(shipmentOptions::class, 'agency_id', 'id');
+    }
 
     public function agencyShipments()
     {

@@ -1,15 +1,11 @@
 @if ($errors->any())
-    <div class="row">
-        <div class="col-12 d-flex flex-wrap">
-            <div class="col-md-12 ">
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
+    <div class="col-md-12 d-flex flex-wrap justify-content-center align-items-center">
+        <div class="alert alert-danger col-md-12" role="alert">
+            <h4 class="alert-heading h5">لطفا موارد زیر را برسی کنید.</h4>
+            @foreach ($errors->all() as $key=>$error)
+                <p>{{$key+1}} . {{ $error }}</p>
+            @endforeach
+
         </div>
     </div>
 @endif

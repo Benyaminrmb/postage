@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Api\MainApiController;
 use App\Http\Controllers\Controller;
 use App\Models\Shipment;
+use App\Models\ShipmentOptions;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -119,6 +121,21 @@ class AdminShipmentController extends Controller
             return 'توسط شخص';
         }
     }
+
+
+    public static function optionType($val): string
+    {
+        if($val==='input'){
+            return 'متن';
+        }
+        if($val==='select'){
+            return 'کمبو باکس';
+        }
+        if($val==='checkbox'){
+            return 'بله / خیر';
+        }
+    }
+
 
     public static function deliveryVehicleFaName($val): string
     {
@@ -368,5 +385,41 @@ class AdminShipmentController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function newShipmentOptions()
+    {
+        return view('admin.shipment.option.add');
+    }
+
+    public function listShipmentOptions()
+    {
+        $shipmentOptions=Auth::user()->shipmentOptions->all();
+        return view('admin.shipment.option.list',compact('shipmentOptions'));
+    }
+    public function storeShipmentOptions(Request $request)
+    {
+        $request->validate([
+            'type'=>'required',
+            'name'=>'required',
+            'data'=>'required',
+        ]);
+
+
+        $flight = new ShipmentOptions;
+
+        $flight->name = $request->name;
+        $flight->type = $request->type;
+        $flight->agency_id = $request->user()->id;
+        $flight->data = json_encode($request->input('data'), JSON_THROW_ON_ERROR);
+
+
+        $flight->save();
+
+        $shipmentOptions=$request->user()->shipmentOptions;
+        alert()->success('تغییرات اعمال شد','تغییرات با موفقیت انجام شد')->showConfirmButton('متوجه شدم');
+
+        return back();
+
     }
 }

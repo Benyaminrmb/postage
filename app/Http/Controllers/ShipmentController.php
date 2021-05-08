@@ -31,11 +31,14 @@ class ShipmentController extends Controller
     {
         $MainApiController=new MainApiController();
         $responseArray=$MainApiController->statesAndCities();
+        $shipmentOptions=Auth::user()->shipmentOptions;
+
+
 
         $states=$responseArray['states'];
         $cities=$responseArray['cities'];
 
-        return view('profile.shipment.new',compact('states','cities'));
+        return view('profile.shipment.new',compact('states','cities','shipmentOptions'));
     }
 
     /**
@@ -46,6 +49,7 @@ class ShipmentController extends Controller
      */
     public function create(Request $request)
     {
+
         $request->validate([
             'deliveryType' => 'required',
             'originAddress' => 'required',
@@ -55,10 +59,6 @@ class ShipmentController extends Controller
             'receiverMobile' => 'required',
             'receiverNationalCode' => 'nullable',
             'deliveryVehicle' => 'required',
-            'productName' => 'required',
-            'productCount' => 'required',
-            'productWeight' => 'required',
-            'productVolume' => 'required',
         ]);
 
         $homeController=new HomeController();
@@ -89,10 +89,7 @@ class ShipmentController extends Controller
             'nationalCode'=>$request->input('receiverNationalCode'),
         ]);
         $postalInformation=$homeController->getJson_encode([
-            'name'=>$request->input('productName'),
-            'count'=>$request->input('productCount'),
-            'weight'=>$request->input('productWeight'),
-            'volume'=>$request->input('productVolume'),
+            $request->input('shipmentOptions')
         ]);
 
         $requirement=[
@@ -104,7 +101,6 @@ class ShipmentController extends Controller
             'deliveryVehicle'=>$request->input('deliveryVehicle'),
             'postalInformation'=>$postalInformation,
         ];
-
 
         $shipment=Shipment::create($requirement);
 
