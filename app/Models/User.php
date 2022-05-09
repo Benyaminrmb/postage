@@ -65,7 +65,7 @@ class User extends Authenticatable
     }
     public function shipmentOptions()
     {
-        return $this->hasMany(shipmentOptions::class, 'agency_id', 'id');
+        return $this->hasMany(ShipmentOptions::class, 'agency_id', 'id');
     }
 
     public function agencyShipments()

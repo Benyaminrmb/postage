@@ -24,6 +24,9 @@ class UserApiController extends Controller
                 'token_expired_at'=>$newToken['token_expired_at']
             ]);
             $finalRequestData=$MainController->makeRequestArray($request->all(), 'getUser');
+
+
+
             $response=$MainController->sendRequestToGds($finalRequestData);
 
 
